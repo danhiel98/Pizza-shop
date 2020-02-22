@@ -20,6 +20,7 @@ class CreatePizzasTable extends Migration
             $table->string('name', 50); // El nombre que le pongan a la pizza
             $table->decimal('base_price', 4,2)->comment('Precio de la base de la pizza (sin ingredientes)');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -20,6 +20,7 @@ class CreateBranchOfficesTable extends Migration
             $table->string('name', 50);
             $table->string('address');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

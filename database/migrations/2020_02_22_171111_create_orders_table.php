@@ -20,6 +20,7 @@ class CreateOrdersTable extends Migration
             $table->integer('order_number');
             $table->integer('client_id')->unsigned();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('client_id')->references('id')->on('orders');
         });

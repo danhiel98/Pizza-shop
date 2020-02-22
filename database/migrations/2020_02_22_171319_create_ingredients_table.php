@@ -20,6 +20,7 @@ class CreateIngredientsTable extends Migration
             $table->string('name', 25);
             $table->decimal('price', 4,2);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
