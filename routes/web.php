@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/{locale}', function ($locale) {
-    App::setLocale($locale);
-    return view('welcome');
-});
+Route::get('lang/{locale}', 'LocalizationController@index');
+Auth::routes();
+
+Route::get('/', 'HomeController@index')->name('home');
