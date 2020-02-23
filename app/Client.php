@@ -1,10 +1,12 @@
 <?php
 
+// Usuario cliente
+
 namespace App;
 
 use App\Scopes\ClientScope;
 
-class Client extends Person
+class Client extends User
 {
     public static function boot()
     {

@@ -2,15 +2,15 @@
 
 namespace App\Scopes;
 
-use App\Person;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Database\Eloquent\Builder;
 
-class UserScope implements Scope
+class AdministratorScope implements Scope
 {
     public function apply(Builder $builder, Model $model)
     {
-        $builder->where('type', Person::NORMAL_USER); // Los usuarios normales (administradores del sistema)
+        $builder->where('type', User::NORMAL_USER); // Los usuarios normales (administradores del sistema)
     }
 }
