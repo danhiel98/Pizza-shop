@@ -15,3 +15,4 @@ Route::get('lang/{locale}', 'LocalizationController@index');
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('clients/{client}/orders', 'User\ClientOrderController@index');

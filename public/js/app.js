@@ -1974,12 +1974,20 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    getOrderHistory: function getOrderHistory() {},
+    getOrderHistory: function getOrderHistory() {
+      var me = this;
+      var url = "clients/".concat(this.$userId, "/orders");
+      axios.get(url).then(function (response) {
+        me.orderHistory = response.data;
+      })["catch"](function (error) {});
+    },
     getPresetCombinations: function getPresetCombinations() {},
     getAviableIngredients: function getAviableIngredients() {},
     getBranchOffices: function getBranchOffices() {}
   },
-  mounted: function mounted() {}
+  mounted: function mounted() {
+    this.getOrderHistory();
+  }
 });
 
 /***/ }),
@@ -51539,9 +51547,14 @@ Vue.use(vuex_i18n__WEBPACK_IMPORTED_MODULE_1__["default"].plugin, store); // Uti
 Vue.i18n.add('en', _vue_i18n_locales_generated_js__WEBPACK_IMPORTED_MODULE_2__["default"].en);
 Vue.i18n.add('es', _vue_i18n_locales_generated_js__WEBPACK_IMPORTED_MODULE_2__["default"].es); // Establecer el idioma por defecto
 
-Vue.i18n.set(localStorage.getItem('locale') || 'es'); // Componentes personalizados
+Vue.i18n.set(localStorage.getItem('locale') || 'es'); // Obtener el id del usuario activo
 
-Vue.component('client-home', __webpack_require__(/*! ./components/Client/Dashboard.vue */ "./resources/js/components/Client/Dashboard.vue")["default"]);
+var meta = document.querySelector("meta[name='user-id']");
+Vue.prototype.$userId = meta ? meta.getAttribute('content') : null; // Componentes personalizados
+
+Vue.component('client-home', __webpack_require__(/*! ./components/Client/Dashboard.vue */ "./resources/js/components/Client/Dashboard.vue")["default"]); // URL base para las peticiones con axios
+
+axios.defaults.baseURL = 'http://localhost:8000';
 var app = new Vue({
   store: store,
   el: '#app'

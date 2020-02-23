@@ -66,7 +66,16 @@
         },
         methods: {
             getOrderHistory(){
+                let me = this;
+                let url = `clients/${this.$userId}/orders`;
 
+                axios.get(url)
+                .then(response => {
+                    me.orderHistory = response.data;
+                })
+                .catch(error => {
+
+                });
             },
             getPresetCombinations(){
 
@@ -79,7 +88,7 @@
             }
         },
         mounted() {
-
+            this.getOrderHistory();
         }
     }
 </script>

@@ -22,8 +22,15 @@ Vue.i18n.add('es', Locales.es);
 // Establecer el idioma por defecto
 Vue.i18n.set(localStorage.getItem('locale') || 'es');
 
+// Obtener el id del usuario activo
+let meta = document.querySelector("meta[name='user-id']");
+Vue.prototype.$userId = meta ? meta.getAttribute('content') : null;
+
 // Componentes personalizados
 Vue.component('client-home', require('./components/Client/Dashboard.vue').default);
+
+// URL base para las peticiones con axios
+axios.defaults.baseURL = 'http://localhost:8000';
 
 const app = new Vue({
     store,
