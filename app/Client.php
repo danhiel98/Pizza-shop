@@ -14,4 +14,9 @@ class Client extends User
 
         static::addGlobalScope(new ClientScope);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

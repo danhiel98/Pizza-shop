@@ -15,4 +15,14 @@ class Pizza extends Model
         'name',
         'base_price'
     ];
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class);
+    }
+
+    public function pizzaDetails()
+    {
+        return $this->hasMany(PizzaDetail::class);
+    }
 }

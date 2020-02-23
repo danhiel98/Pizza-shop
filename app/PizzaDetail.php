@@ -12,4 +12,14 @@ class PizzaDetail extends Model
         'ingredient_price',
         'ingredient_quantity'
     ];
+
+    public function pizza()
+    {
+        return $this->belongsTo(Pizza::class);
+    }
+
+    public function ingredient()
+    {
+        return $this->belongsTo(Ingredient::class);
+    }
 }

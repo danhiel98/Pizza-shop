@@ -8,25 +8,24 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+import Vuex from 'vuex'; // Para tener datos globales
+import vuexI18n from 'vuex-i18n'; // Se utiliza para poder utilizar la característica de multiidioma
+import Locales from './vue-i18n-locales.generated.js'; // Archivo generado con las traducciones
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+const store = new Vuex.Store();
+Vue.use(vuexI18n.plugin, store); // Utilizar vuex y el plugin para multiidioma
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+// Agregar los idiomas
+Vue.i18n.add('en', Locales.en);
+Vue.i18n.add('es', Locales.es);
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+// Establecer el idioma por defecto
+Vue.i18n.set(localStorage.getItem('locale') || 'es');
+
+// Componentes personalizados
+Vue.component('client-home', require('./components/Client/Dashboard.vue').default);
 
 const app = new Vue({
+    store,
     el: '#app',
 });

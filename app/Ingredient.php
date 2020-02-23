@@ -15,4 +15,9 @@ class Ingredient extends Model
         'name',
         'price'
     ];
+
+    public function pizzaDetails()
+    {
+        return $this->hasMany(PizzaDetail::class);
+    }
 }

@@ -16,7 +16,13 @@ class Order extends Model
         'client_id'
     ];
 
-    public function getClient(){
-        return $this->hasOne(Client::class);
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
+
+    public function orderDetail()
+    {
+        return $this->hasMany(OrderDetail::class);
     }
 }

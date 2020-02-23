@@ -11,4 +11,14 @@ class OrderDetail extends Model
         'pizza_id',
         'order_id'
     ];
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+
+    public function pizza()
+    {
+        return $this->belongsTo(Pizza::class);
+    }
 }
