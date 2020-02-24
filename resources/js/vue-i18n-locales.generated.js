@@ -22,7 +22,11 @@ export default {
             "preset_combinations": "Preset combinations",
             "aviable_ingredients": "Aviable ingredients",
             "new_order": "New order",
-            "offices": "Branch offices"
+            "offices": "Branch offices",
+            "order_number": "Order #",
+            "date": "Date",
+            "pizza_quantity": "Pizza quantity",
+            "total": "Total"
         },
         "pagination": {
             "previous": "&laquo; Previous",
@@ -171,7 +175,11 @@ export default {
             "preset_combinations": "Combinaciones preestablecidas",
             "aviable_ingredients": "Ingredientes disponibles",
             "new_order": "Nuevo pedido",
-            "offices": "Sucursales"
+            "offices": "Sucursales",
+            "order_number": "# Pedido",
+            "date": "Fecha",
+            "pizza_quantity": "Cant. Pizzas",
+            "total": "Total"
         },
         "passwords": {
             "reset": "¡Su contraseña ha sido restablecida!",

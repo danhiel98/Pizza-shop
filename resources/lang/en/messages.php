@@ -18,5 +18,9 @@ return [
     'preset_combinations' => 'Preset combinations',
     'aviable_ingredients' => 'Aviable ingredients',
     'new_order'           => 'New order',
-    'offices'             => 'Branch offices'
+    'offices'             => 'Branch offices',
+    'order_number'        => 'Order #',
+    'date'                => 'Date',
+    'pizza_quantity'      => 'Pizza quantity',
+    'total'               => 'Total'
 ];

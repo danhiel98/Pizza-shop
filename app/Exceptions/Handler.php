@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use App\Traits\ResponserTrait;
 use Illuminate\Database\QueryException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Session\TokenMismatchException;
@@ -10,13 +11,12 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\ResponseTrait;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
-    use ResponseTrait; // Usar trait encargado de las respuestas
+    use ResponserTrait; // Usar trait encargado de las respuestas
 
     /**
      * A list of the exception types that are not reported.

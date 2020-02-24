@@ -11,6 +11,8 @@ class Pizza extends Model
 
     protected $dates = [ 'deleted_at' ];
 
+    protected $hidden = ['pivot'];
+
     protected $fillable = [
         'name',
         'base_price'
@@ -24,5 +26,15 @@ class Pizza extends Model
     public function pizzaDetails()
     {
         return $this->hasMany(PizzaDetail::class);
+    }
+
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'order_details', 'pizza_id', 'order_id');
+    }
+
+    public function ingredients()
+    {
+        return $this->belongsToMany(Ingredient::class, 'order_details', 'pizza_id', 'ingredient_id');
     }
 }

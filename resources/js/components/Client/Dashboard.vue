@@ -1,9 +1,11 @@
 <template>
-    <div class="container">
-        <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <div class="container-fluid">
+        <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
             <!-- <h1 class="display-4">{{ $t('messages.title') }}</h1> -->
             <p class="lead">{{ $t('messages.client_message') }}</p>
-            <button type="button" class="btn btn-lg btn-block btn-primary">{{ $t('messages.new_order') }}</button>
+            <div class="d-flex justify-content-center bd-highlight mb-3">
+                <button type="button" class="btn btn-lg btn-block btn-primary col-md-2">{{ $t('messages.new_order') }}</button>
+            </div>
         </div>
         <div class="card-deck mb-3 text-center">
             <div class="col-sm-6">
@@ -12,8 +14,24 @@
                         <h5 class="my-0 font-weight-normal">{{ $t('messages.client_orders') }}</h5>
                     </div>
                     <div class="card-body">
-                        <!-- <h1 class="card-title pricing-card-title"><span v-text="`0`"></span></h1>
-                        <button type="button" class="btn btn-lg btn-block btn-outline-primary">Sign up for free</button> -->
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{{ $t('messages.order_number') }}</th>
+                                    <th scope="col">{{ $t('messages.date') }}</th>
+                                    <th scope="col">{{ $t('messages.pizza_quantity') }}</th>
+                                    <th scope="col">{{ $t('messages.total') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="order in orderHistory" :key="order.id">
+                                    <th v-text="order.order_number"></th>
+                                    <td v-text="order.date"></td>
+                                    <td v-text="order.pizza_quantity"></td>
+                                    <td v-text="`$${order.total}`"></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -23,8 +41,7 @@
                         <h5 class="my-0 font-weight-normal">{{ $t('messages.preset_combinations') }}</h5>
                     </div>
                     <div class="card-body">
-                        <!-- <h1 class="card-title pricing-card-title">0</h1>
-                        <button type="button" class="btn btn-lg btn-block btn-primary">Get started</button> -->
+
                     </div>
                 </div>
             </div>
@@ -34,8 +51,7 @@
                         <h5 class="my-0 font-weight-normal">{{ $t('messages.aviable_ingredients') }}</h5>
                     </div>
                     <div class="card-body">
-                        <!-- <h1 class="card-title pricing-card-title">0</h1>
-                        <button type="button" class="btn btn-lg btn-block btn-primary">Contact us</button> -->
+
                     </div>
                 </div>
             </div>
@@ -45,8 +61,7 @@
                         <h5 class="my-0 font-weight-normal">{{ $t('messages.offices') }}</h5>
                     </div>
                     <div class="card-body">
-                        <!-- <h1 class="card-title pricing-card-title">0</h1>
-                        <button type="button" class="btn btn-lg btn-block btn-primary">Contact us</button> -->
+
                     </div>
                 </div>
             </div>
@@ -61,17 +76,19 @@
                 orderHistory: [],
                 presetCombinations: [],
                 aviableIngredients: [],
-                branchOffices: []
+                branchOffices: [],
+
             }
         },
         methods: {
             getOrderHistory(){
                 let me = this;
                 let url = `clients/${this.$userId}/orders`;
+                Vue.$toast.success('message string', { position: 'top-right' });
 
                 axios.get(url)
                 .then(response => {
-                    me.orderHistory = response.data;
+                    me.orderHistory = response.data.data;
                 })
                 .catch(error => {
 
@@ -92,3 +109,9 @@
         }
     }
 </script>
+<style>
+    .card-body {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+</style>

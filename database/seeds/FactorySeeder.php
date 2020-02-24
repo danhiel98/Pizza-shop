@@ -11,12 +11,12 @@ class FactorySeeder extends Seeder
      */
     public function run()
     {
-        $persons = factory(App\Person::class, 10)->create();
+        $users         = factory(App\User::class, 5)->create();
         $branchOffices = factory(App\BranchOffice::class, 3)->create();
-        $ingredients = factory(App\Ingredient::class, 15)->create();
-        $pizzas = factory(App\Pizza::class, 5)->create();
-        $pizzaDetails = factory(App\PizzaDetail::class, 20)->create();
-        $orders = factory(App\Order::class, 7)->create();
-        $orderDetails = factory(App\OrderDetail::class, 15)->create();
+        $ingredients   = factory(App\Ingredient::class, 15)->create();
+        $pizzas        = factory(App\Pizza::class, 5)->create();
+        $pizzaDetails  = factory(App\PizzaDetail::class, 20)->create();
+        $orders        = factory(App\Order::class, 15)->create();
+        $orderDetails  = factory(App\OrderDetail::class, 40)->create();
     }
 }

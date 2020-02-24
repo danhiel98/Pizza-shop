@@ -18,5 +18,9 @@ return [
     'preset_combinations' => 'Combinaciones preestablecidas',
     'aviable_ingredients' => 'Ingredientes disponibles',
     'new_order'           => 'Nuevo pedido',
-    'offices'             => 'Sucursales'
+    'offices'             => 'Sucursales',
+    'order_number'        => '# Pedido',
+    'date'                => 'Fecha',
+    'pizza_quantity'      => 'Cant. Pizzas',
+    'total'               => 'Total'
 ];

@@ -6,7 +6,6 @@ use App\User;
 use App\Order;
 use App\Pizza;
 use App\Client;
-use App\Person;
 use App\Ingredient;
 use App\OrderDetail;
 use App\PizzaDetail;
@@ -25,14 +24,14 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(Person::class, function (Faker $faker) {
+$factory->define(User::class, function (Faker $faker) {
     return [
         'name'              => $faker->name,
         'email'             => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
         'password'          => bcrypt('secret'),
         'remember_token'    => Str::random(10),
-        'type'              => $faker->randomElement([Person::NORMAL_USER, Person::CLIENT_USER])
+        'type'              => $faker->randomElement([User::NORMAL_USER, User::CLIENT_USER])
     ];
 });
 
