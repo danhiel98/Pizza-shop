@@ -2,12 +2,15 @@
 
 namespace App;
 
+use App\Transformers\PizzaTransformer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pizza extends Model
 {
     use SoftDeletes;
+
+    public $transformer = PizzaTransformer::class;
 
     protected $dates = [ 'deleted_at' ];
 

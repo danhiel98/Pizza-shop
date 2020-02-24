@@ -26,7 +26,11 @@ export default {
             "order_number": "Order #",
             "date": "Date",
             "pizza_quantity": "Pizza quantity",
-            "total": "Total"
+            "total": "Total",
+            "error_message": "An error ocurred",
+            "price": "Price",
+            "base_price": "Base Price",
+            "address": "Address"
         },
         "pagination": {
             "previous": "&laquo; Previous",
@@ -179,7 +183,11 @@ export default {
             "order_number": "# Pedido",
             "date": "Fecha",
             "pizza_quantity": "Cant. Pizzas",
-            "total": "Total"
+            "total": "Total",
+            "error_message": "Ocurrio un error",
+            "price": "Precio",
+            "base_price": "Precio base",
+            "address": "Dirección"
         },
         "passwords": {
             "reset": "¡Su contraseña ha sido restablecida!",

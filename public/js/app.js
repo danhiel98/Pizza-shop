@@ -2066,6 +2066,51 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2077,21 +2122,69 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     getOrderHistory: function getOrderHistory() {
+      // Obtener historial de pedidos
       var me = this;
       var url = "clients/".concat(this.$userId, "/orders");
-      Vue.$toast.success('message string', {
-        position: 'top-right'
-      });
       axios.get(url).then(function (response) {
-        me.orderHistory = response.data.data;
-      })["catch"](function (error) {});
+        me.orderHistory = response.data.data; // Asignar el resultado en la variable de vue
+      })["catch"](function (error) {
+        Vue.$toast.error("Error: ".concat(error), {
+          position: 'top-right'
+        });
+      });
     },
-    getPresetCombinations: function getPresetCombinations() {},
-    getAviableIngredients: function getAviableIngredients() {},
-    getBranchOffices: function getBranchOffices() {}
+    getOrderDetail: function getOrderDetail(order) {
+      // Obtener el detalle de un pedido en específico
+      var me = this;
+      var url = "orders/".concat(this.order.id);
+      axios.get(url).then(function (response) {})["catch"](function (error) {
+        Vue.$toast.error("Error: ".concat(error), {
+          position: 'top-right'
+        });
+      });
+    },
+    getPresetCombinations: function getPresetCombinations() {
+      // Obtener combinaciones preestablecidas
+      var me = this;
+      var url = "pizzas";
+      axios.get(url).then(function (response) {
+        me.presetCombinations = response.data.data;
+      })["catch"](function (error) {
+        Vue.$toast.error("Error: ".concat(error), {
+          position: 'top-right'
+        });
+      });
+    },
+    getAviableIngredients: function getAviableIngredients() {
+      // Obtener ingredientes
+      var me = this;
+      var url = "ingredients";
+      axios.get(url).then(function (response) {
+        me.aviableIngredients = response.data.data;
+      })["catch"](function (error) {
+        Vue.$toast.error("Error: ".concat(error), {
+          position: 'top-right'
+        });
+      });
+    },
+    getBranchOffices: function getBranchOffices() {
+      // Obtener sucursales
+      var me = this;
+      var url = "branch-offices";
+      axios.get(url).then(function (response) {
+        me.branchOffices = response.data.data;
+      })["catch"](function (error) {
+        Vue.$toast.error("Error: ".concat(error), {
+          position: 'top-right'
+        });
+      });
+    }
   },
   mounted: function mounted() {
     this.getOrderHistory();
+    this.getPresetCombinations();
+    this.getAviableIngredients();
+    this.getBranchOffices();
   }
 });
 
@@ -40762,7 +40855,7 @@ var render = function() {
             _c(
               "button",
               {
-                staticClass: "btn btn-lg btn-block btn-primary col-md-2",
+                staticClass: "btn btn-lg btn-block btn-success col-md-2",
                 attrs: { type: "button" }
               },
               [_vm._v(_vm._s(_vm.$t("messages.new_order")))]
@@ -40775,7 +40868,7 @@ var render = function() {
     _c("div", { staticClass: "card-deck mb-3 text-center" }, [
       _c("div", { staticClass: "col-sm-6" }, [
         _c("div", { staticClass: "card mb-4 box-shadow" }, [
-          _c("div", { staticClass: "card-header" }, [
+          _c("div", { staticClass: "card-header bg-primary text-white" }, [
             _c("h5", { staticClass: "my-0 font-weight-normal" }, [
               _vm._v(_vm._s(_vm.$t("messages.client_orders")))
             ])
@@ -40831,37 +40924,141 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "col-sm-6" }, [
         _c("div", { staticClass: "card mb-4 box-shadow" }, [
-          _c("div", { staticClass: "card-header" }, [
+          _c("div", { staticClass: "card-header bg-primary text-white" }, [
             _c("h5", { staticClass: "my-0 font-weight-normal" }, [
               _vm._v(_vm._s(_vm.$t("messages.preset_combinations")))
             ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "card-body" })
+          _c("div", { staticClass: "card-body" }, [
+            _c("table", { staticClass: "table table-striped table-sm" }, [
+              _c("thead", [
+                _c("tr", [
+                  _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
+                  _vm._v(" "),
+                  _c("th", { attrs: { scope: "col" } }, [
+                    _vm._v(_vm._s(_vm.$t("messages.name")))
+                  ]),
+                  _vm._v(" "),
+                  _c("th", { attrs: { scope: "col" } }, [
+                    _vm._v(_vm._s(_vm.$t("messages.base_price")))
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.presetCombinations, function(combination, i) {
+                  return _c("tr", { key: combination.id }, [
+                    _c("th", { domProps: { textContent: _vm._s(++i) } }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(combination.name) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: {
+                        textContent: _vm._s("$" + combination.base_price)
+                      }
+                    })
+                  ])
+                }),
+                0
+              )
+            ])
+          ])
         ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-sm-6" }, [
         _c("div", { staticClass: "card mb-4 box-shadow" }, [
-          _c("div", { staticClass: "card-header" }, [
+          _c("div", { staticClass: "card-header bg-primary text-white" }, [
             _c("h5", { staticClass: "my-0 font-weight-normal" }, [
               _vm._v(_vm._s(_vm.$t("messages.aviable_ingredients")))
             ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "card-body" })
+          _c("div", { staticClass: "card-body" }, [
+            _c("table", { staticClass: "table table-striped table-sm" }, [
+              _c("thead", [
+                _c("tr", [
+                  _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
+                  _vm._v(" "),
+                  _c("th", { attrs: { scope: "col" } }, [
+                    _vm._v(_vm._s(_vm.$t("messages.name")))
+                  ]),
+                  _vm._v(" "),
+                  _c("th", { attrs: { scope: "col" } }, [
+                    _vm._v(_vm._s(_vm.$t("messages.price")))
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.aviableIngredients, function(ingredient, i) {
+                  return _c("tr", { key: ingredient.id }, [
+                    _c("th", { domProps: { textContent: _vm._s(++i) } }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(ingredient.name) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s("$" + ingredient.price) }
+                    })
+                  ])
+                }),
+                0
+              )
+            ])
+          ])
         ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-sm-6" }, [
         _c("div", { staticClass: "card mb-4 box-shadow" }, [
-          _c("div", { staticClass: "card-header" }, [
+          _c("div", { staticClass: "card-header bg-primary text-white" }, [
             _c("h5", { staticClass: "my-0 font-weight-normal" }, [
               _vm._v(_vm._s(_vm.$t("messages.offices")))
             ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "card-body" })
+          _c("div", { staticClass: "card-body" }, [
+            _c("table", { staticClass: "table table-striped table-sm" }, [
+              _c("thead", [
+                _c("tr", [
+                  _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
+                  _vm._v(" "),
+                  _c("th", { attrs: { scope: "col" } }, [
+                    _vm._v(_vm._s(_vm.$t("messages.name")))
+                  ]),
+                  _vm._v(" "),
+                  _c("th", { attrs: { scope: "col" } }, [
+                    _vm._v(_vm._s(_vm.$t("messages.address")))
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.branchOffices, function(office, i) {
+                  return _c("tr", { key: office.id }, [
+                    _c("th", { domProps: { textContent: _vm._s(++i) } }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(office.name) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(office.address) }
+                    })
+                  ])
+                }),
+                0
+              )
+            ])
+          ])
         ])
       ])
     ])
@@ -62451,7 +62648,11 @@ __webpack_require__.r(__webpack_exports__);
       "order_number": "Order #",
       "date": "Date",
       "pizza_quantity": "Pizza quantity",
-      "total": "Total"
+      "total": "Total",
+      "error_message": "An error ocurred",
+      "price": "Price",
+      "base_price": "Base Price",
+      "address": "Address"
     },
     "pagination": {
       "previous": "&laquo; Previous",
@@ -62604,7 +62805,11 @@ __webpack_require__.r(__webpack_exports__);
       "order_number": "# Pedido",
       "date": "Fecha",
       "pizza_quantity": "Cant. Pizzas",
-      "total": "Total"
+      "total": "Total",
+      "error_message": "Ocurrio un error",
+      "price": "Precio",
+      "base_price": "Precio base",
+      "address": "Dirección"
     },
     "passwords": {
       "reset": "¡Su contraseña ha sido restablecida!",

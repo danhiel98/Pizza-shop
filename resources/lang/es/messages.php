@@ -22,5 +22,9 @@ return [
     'order_number'        => '# Pedido',
     'date'                => 'Fecha',
     'pizza_quantity'      => 'Cant. Pizzas',
-    'total'               => 'Total'
+    'total'               => 'Total',
+    'error_message'       => 'Ocurrio un error',
+    'price'               => 'Precio',
+    'base_price'          => 'Precio base',
+    'address'             => 'Dirección'
 ];

@@ -3,11 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Transformers\IngredientTransformer;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Ingredient extends Model
 {
     use SoftDeletes;
+
+    public $transformer = IngredientTransformer::class;
 
     protected $dates = [ 'deleted_at' ];
 

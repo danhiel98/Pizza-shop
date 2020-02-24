@@ -16,3 +16,6 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('clients/{client}/orders', 'User\ClientOrderController@index');
+Route::resource('ingredients', 'Ingredient\IngredientController', ['except' => ['store', 'edit']]);
+Route::resource('pizzas', 'Pizza\PizzaController', ['except' => ['store', 'edit']]);
+Route::resource('branch-offices', 'BranchOffice\BranchOfficeController', ['except' => ['store', 'edit']]);
