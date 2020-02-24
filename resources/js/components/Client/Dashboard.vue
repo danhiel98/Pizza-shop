@@ -11,9 +11,12 @@
             <div class="col-sm-6">
                 <div class="card mb-4 box-shadow">
                     <div class="card-header bg-primary text-white">
-                        <h5 class="my-0 font-weight-normal">{{ $t('messages.client_orders') }}</h5>
+                        <h5 class="my-0 font-weight-normal">
+                            {{ $t('messages.client_orders') }}
+                            <small v-if="loadingOrderHistory"><i class="fa fa-spinner fa-spin"></i></small>
+                        </h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body-2">
                         <table class="table table-striped table-sm">
                             <thead>
                                 <tr>
@@ -38,9 +41,12 @@
             <div class="col-sm-6">
                 <div class="card mb-4 box-shadow">
                     <div class="card-header bg-primary text-white">
-                        <h5 class="my-0 font-weight-normal">{{ $t('messages.preset_combinations') }}</h5>
+                        <h5 class="my-0 font-weight-normal">
+                            {{ $t('messages.preset_combinations') }}
+                            <small v-if="loadingPresetCombinations"><i class="fa fa-spinner fa-spin"></i></small>
+                        </h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body-2">
                         <table class="table table-striped table-sm">
                             <thead>
                                 <tr>
@@ -63,9 +69,12 @@
             <div class="col-sm-6">
                 <div class="card mb-4 box-shadow">
                     <div class="card-header bg-primary text-white">
-                        <h5 class="my-0 font-weight-normal">{{ $t('messages.aviable_ingredients') }}</h5>
+                        <h5 class="my-0 font-weight-normal">
+                            {{ $t('messages.aviable_ingredients') }}
+                            <small v-if="loadingAviableIngredients"><i class="fa fa-spinner fa-spin"></i></small>
+                        </h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body-2">
                         <table class="table table-striped table-sm">
                             <thead>
                                 <tr>
@@ -88,9 +97,12 @@
             <div class="col-sm-6">
                 <div class="card mb-4 box-shadow">
                     <div class="card-header bg-primary text-white">
-                        <h5 class="my-0 font-weight-normal">{{ $t('messages.offices') }}</h5>
+                        <h5 class="my-0 font-weight-normal">
+                            {{ $t('messages.offices') }}
+                            <small v-if="loadingBranchOffices"><i class="fa fa-spinner fa-spin"></i></small>
+                        </h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body-2">
                         <table class="table table-striped table-sm">
                             <thead>
                                 <tr>
@@ -122,6 +134,10 @@
                 presetCombinations: [],
                 aviableIngredients: [],
                 branchOffices: [],
+                loadingOrderHistory: false,
+                loadingPresetCombinations: false,
+                loadingAviableIngredients: false,
+                loadingBranchOffices: false,
             }
         },
         methods: {
@@ -129,12 +145,16 @@
                 let me = this;
                 let url = `clients/${this.$userId}/orders`;
 
+                me.loadingOrderHistory = true;
                 axios.get(url)
                 .then(response => {
                     me.orderHistory = response.data.data; // Asignar el resultado en la variable de vue
                 })
                 .catch(error => {
                     Vue.$toast.error(`Error: ${error}`, { position: 'top-right' });
+                })
+                .finally(() => {
+                    me.loadingOrderHistory = false;
                 });
             },
             getOrderDetail(order){ // Obtener el detalle de un pedido en específico
@@ -153,36 +173,48 @@
                 let me = this;
                 let url = `pizzas`;
 
+                me.loadingPresetCombinations = true;
                 axios.get(url)
                 .then(response => {
                     me.presetCombinations = response.data.data;
                 })
                 .catch(error => {
                     Vue.$toast.error(`Error: ${error}`, { position: 'top-right' });
+                })
+                .finally(() => {
+                    me.loadingPresetCombinations = false;
                 });
             },
             getAviableIngredients(){ // Obtener ingredientes
                 let me = this;
                 let url = `ingredients`
 
+                me.loadingAviableIngredients = true;
                 axios.get(url)
                 .then(response => {
                     me.aviableIngredients = response.data.data;
                 })
                 .catch(error => {
                     Vue.$toast.error(`Error: ${error}`, { position: 'top-right' });
+                })
+                .finally(() => {
+                    me.loadingAviableIngredients = false;
                 });
             },
             getBranchOffices(){ // Obtener sucursales
                 let me = this;
                 let url = `branch-offices`
 
+                me.loadingBranchOffices = true;
                 axios.get(url)
                 .then(response => {
                     me.branchOffices = response.data.data;
                 })
                 .catch(error => {
                     Vue.$toast.error(`Error: ${error}`, { position: 'top-right' });
+                })
+                .finally(() => {
+                    me.loadingBranchOffices = false;
                 });
             }
         },
@@ -195,7 +227,7 @@
     }
 </script>
 <style>
-    .card-body {
+    .card-body-2 {
         max-height: 200px;
         overflow-y: auto;
     }
