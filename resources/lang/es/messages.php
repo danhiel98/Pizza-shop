@@ -26,5 +26,9 @@ return [
     'error_message'       => 'Ocurrio un error',
     'price'               => 'Precio',
     'base_price'          => 'Precio base',
-    'address'             => 'Dirección'
+    'address'             => 'Dirección',
+    'order_detail'        => 'Detalle de pedido',
+    'details'             => 'Detalles',
+    'pizza_name'          => 'Nombre pizza',
+    'quantity'            => 'Cantidad',
 ];

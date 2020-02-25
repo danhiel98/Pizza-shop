@@ -22,20 +22,21 @@ class DatabaseSeeder extends Seeder
         // No tener en cuenta llaves foraneas para poder eliminar las tablas sin problema
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        User::truncate();
-        BranchOffice::truncate();
-        Ingredient::truncate();
-        Pizza::truncate();
-        PizzaDetail::truncate();
-        Order::truncate();
-        OrderDetail::truncate();
+        // User::truncate();
+        // BranchOffice::truncate();
+        // Ingredient::truncate();
+        // Pizza::truncate();
+        // PizzaDetail::truncate();
+        // Order::truncate();
+        // OrderDetail::truncate();
 
-        User::create([
-            'name'     => 'Principal',
-            'email'    => 'admin@mail.com',
-            'password' => bcrypt('admin')
-        ]);
-
-        $this->call(FactorySeeder::class);
+        // $this->call(FactorySeeder::class);
+        $this->call(UserSeeder::class);
+        $this->call(BranchOfficeSeeder::class);
+        $this->call(IngredientSeeder::class);
+        $this->call(PizzaSeeder::class);
+        $this->call(PizzaDetailSeeder::class);
+        $this->call(OrderSeeder::class);
+        $this->call(OrderDetailSeeder::class);
     }
 }

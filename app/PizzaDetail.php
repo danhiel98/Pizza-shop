@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Transformers\PizzaDetailTransformer;
 use Illuminate\Database\Eloquent\Model;
 
 class PizzaDetail extends Model
 {
+    public $transformer = PizzaDetailTransformer::class;
+
     protected $fillable = [
         'pizza_id',
         'ingredient_id',

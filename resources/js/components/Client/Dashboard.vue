@@ -24,6 +24,7 @@
                                     <th scope="col">{{ $t('messages.date') }}</th>
                                     <th scope="col">{{ $t('messages.pizza_quantity') }}</th>
                                     <th scope="col">{{ $t('messages.total') }}</th>
+                                    <td></td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -32,6 +33,9 @@
                                     <td v-text="order.date"></td>
                                     <td v-text="order.pizza_quantity"></td>
                                     <td v-text="`$${order.total}`"></td>
+                                    <td>
+                                        <a href="#" class="btn btn-default btn-sm" @click.prevent="showOrderDetails(order)"><i class="fa fa-eye"></i></a>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -123,6 +127,53 @@
                 </div>
             </div>
         </div>
+        <stack-modal
+            :show="orderDetailModal"
+            :title="`${translate('order_detail')} #${activeOrder ? activeOrder.order_number : ''}`"
+            @close="closeDetailModal"
+        >
+            <div class="row" v-if="activeOrder">
+                <div class="col-md-4">
+                    <strong>{{ $t('messages.date') }}:</strong>&nbsp;
+                    <span v-text="activeOrder.date"></span>
+                </div>
+                <div class="col-md-4">
+                    <strong>{{ $t('messages.pizza_quantity') }}:</strong>&nbsp;
+                    <span v-text="activeOrder.pizza_quantity"></span>
+                </div>
+                <div class="col-md-4">
+                    <strong>{{ $t('messages.total') }}:</strong>&nbsp;
+                    <span v-text="`$${activeOrder.total}`"></span>
+                </div>
+                <div class="col-md-12">
+                    <strong class="d-flex justify-content-center">{{ $t('messages.details') }}:</strong>
+                    <table class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">{{ $t('messages.pizza_name') }}</th>
+                                <th class="text-center">{{ $t('messages.quantity') }}</th>
+                                <th class="text-center">{{ $t('messages.price') }}</th>
+                                <th class="text-center">Subtotal</th>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(detail, i) in activeOrderDetails" :key="detail.id">
+                                <th v-text="++i"></th>
+                                <td v-text="detail.pizza.name"></td>
+                                <td class="text-center" v-text="detail.pizza_quantity"></td>
+                                <td class="text-center" v-text="`$${detail.pizza_price}`"></td>
+                                <td class="text-center" v-text="`$${detail.total}`"></td>
+                                <td>
+                                    <!-- <a href="#" class="btn btn-default btn-sm" @click.prevent="showOrderDetails(order)"><i class="fa fa-eye"></i></a> -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </stack-modal>
     </div>
 </template>
 
@@ -131,16 +182,26 @@
         data() {
             return {
                 orderHistory: [],
-                presetCombinations: [],
-                aviableIngredients: [],
-                branchOffices: [],
                 loadingOrderHistory: false,
+
+                presetCombinations: [],
                 loadingPresetCombinations: false,
+
+                aviableIngredients: [],
                 loadingAviableIngredients: false,
+
+                branchOffices: [],
                 loadingBranchOffices: false,
+
+                activeOrder: null, // Pedido a mostrar
+                activeOrderDetails: [],
+                orderDetailModal: false, // Modal para ver el detalle del pedido
             }
         },
         methods: {
+            translate(key){ // Equivalente a $t en el template
+                return Vue.i18n.translate(`messages.${key}`);
+            },
             getOrderHistory(){ // Obtener historial de pedidos
                 let me = this;
                 let url = `clients/${this.$userId}/orders`;
@@ -157,17 +218,37 @@
                     me.loadingOrderHistory = false;
                 });
             },
-            getOrderDetail(order){ // Obtener el detalle de un pedido en específico
+            getOrderDetails(order){ // Obtener el detalle de un pedido en específico
                 let me = this;
-                let url = `orders/${this.order.id}`;
+                let url = `orders/${order.id}/order-details`;
 
-                axios.get(url)
-                .then(response => {
+                return new Promise((resolve, reject) => {
+                    axios.get(url)
+                    .then(response => {
+                        resolve(response.data.data);
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+                });
+            },
+            showOrderDetails(order){ // Mostrar el detalle del pedido
+                this.activeOrder = order;
+                this.orderDetailModal = true;
 
+                this.activeOrderDetails = [];
+                this.getOrderDetails(order)
+                .then(details => {
+                    this.activeOrderDetails = details;
                 })
                 .catch(error => {
                     Vue.$toast.error(`Error: ${error}`, { position: 'top-right' });
                 });
+            },
+            closeDetailModal(){
+                this.orderDetailModal = false;
+                this.activeOrder = null;
+                this.activeOrderDetails = null;
             },
             getPresetCombinations(){ // Obtener combinaciones preestablecidas
                 let me = this;
@@ -216,7 +297,7 @@
                 .finally(() => {
                     me.loadingBranchOffices = false;
                 });
-            }
+            },
         },
         mounted() {
             this.getOrderHistory();

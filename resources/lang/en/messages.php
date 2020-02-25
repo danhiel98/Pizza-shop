@@ -27,4 +27,8 @@ return [
     'price'               => 'Price',
     'base_price'          => 'Base Price',
     'address'             => 'Address',
+    'order_detail'        => 'Order Detail',
+    'details'             => 'Details',
+    'pizza_name'          => 'Pizza name',
+    'quantity'            => 'Quantity',
 ];

@@ -13,6 +13,7 @@ import vuexI18n from 'vuex-i18n'; // Se utiliza para poder utilizar la caracter√
 import Locales from './vue-i18n-locales.generated.js'; // Archivo generado con las traducciones
 import VueToast from 'vue-toast-notification';
 import {ServerTable, ClientTable, Event} from 'vue-tables-2';
+import StackModal from '@innologica/vue-stackable-modal'
 import 'vue-toast-notification/dist/index.css';
 
 const store = new Vuex.Store();
@@ -32,6 +33,7 @@ let meta = document.querySelector("meta[name='user-id']");
 Vue.prototype.$userId = meta ? meta.getAttribute('content') : null;
 
 // Componentes personalizados
+Vue.component('stack-modal', StackModal);
 Vue.component('client-home', require('./components/Client/Dashboard.vue').default);
 
 // URL base para las peticiones con axios

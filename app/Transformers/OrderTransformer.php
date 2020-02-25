@@ -19,7 +19,7 @@ class OrderTransformer extends TransformerAbstract
             'order_number'   => (int)$order->order_number,
             'date'           => (string)$order->date,
             'pizza_quantity' => (integer)$order->pizza_quantity,
-            'total'          => (double)$order->total,
+            'total'          => (double)number_format($order->total, 2),
             'created_at'     => (string)$order->created_at,
             'client'         => [
                 'id'    => (int)$order->client->id,

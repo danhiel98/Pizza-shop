@@ -28,6 +28,8 @@ trait ResponserTrait
     // Respuesta de la coleccion de registros encontrados
     public function showAll(Collection $collection, $code = 200)
     {
+        if ($collection->count() == 0) return $this->successResponse($collection, $code);
+
         $transformer = $collection->first()->transformer;
         $collection = $this->transformData($collection, $transformer);
 

@@ -30,7 +30,11 @@ export default {
             "error_message": "An error ocurred",
             "price": "Price",
             "base_price": "Base Price",
-            "address": "Address"
+            "address": "Address",
+            "order_detail": "Order Detail",
+            "details": "Details",
+            "pizza_name": "Pizza name",
+            "quantity": "Quantity"
         },
         "pagination": {
             "previous": "&laquo; Previous",
@@ -187,7 +191,11 @@ export default {
             "error_message": "Ocurrio un error",
             "price": "Precio",
             "base_price": "Precio base",
-            "address": "Dirección"
+            "address": "Dirección",
+            "order_detail": "Detalle de pedido",
+            "details": "Detalles",
+            "pizza_name": "Nombre pizza",
+            "quantity": "Cantidad"
         },
         "passwords": {
             "reset": "¡Su contraseña ha sido restablecida!",

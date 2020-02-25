@@ -40,4 +40,16 @@ class Pizza extends Model
     {
         return $this->belongsToMany(Ingredient::class, 'order_details', 'pizza_id', 'ingredient_id');
     }
+
+    public function getPriceAttribute()
+    {
+        $details = $this->pizzaDetails;
+
+        $total = $this->base_price;
+        foreach ($details as $detail){
+            $total += $detail->ingredient_price * $detail->ingredient_quantity;
+        }
+
+        return $total;
+    }
 }

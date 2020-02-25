@@ -41,4 +41,21 @@ class Order extends Model
         return $this->belongsToMany(Pizza::class, 'order_details', 'order_id', 'pizza_id');
     }
 
+    public function getPizzaQuantityAttribute()
+    {
+        return $this->orderDetails()->get()->pluck('pizza_quantity')->sum();
+    }
+
+    public function getTotalAttribute()
+    {
+        $pizzas = $this->pizzas;
+        $orderDetails = $this->orderDetails;
+
+        $total = 0;
+        foreach ($orderDetails as $detail) {
+            $total += $detail->pizza_quantity * $detail->pizza->price;
+        }
+
+        return $total; // Asignar el total al pedido
+    }
 }

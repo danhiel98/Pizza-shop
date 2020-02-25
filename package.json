@@ -24,6 +24,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "@innologica/vue-stackable-modal": "^0.1.9",
         "vue-data-tables": "^3.4.5",
         "vue-i18n": "^8.15.3",
         "vue-tables-2": "^2.0.0",

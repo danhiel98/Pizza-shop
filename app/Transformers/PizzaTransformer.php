@@ -18,6 +18,7 @@ class PizzaTransformer extends TransformerAbstract
             'id'         => (int)$pizza->id,
             'name'       => (string)$pizza->name,
             'base_price' => (double)$pizza->base_price,
+            'total'      => (double)number_format($pizza->price, 2),
             'created_at' => (string)$pizza->created_at
         ];
     }
