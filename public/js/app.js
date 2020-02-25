@@ -2250,6 +2250,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2403,7 +2407,6 @@ __webpack_require__.r(__webpack_exports__);
       this.combinationDetailModal = true;
       this.activeCombinationDetails = [];
       this.getCombinationDetails(combination).then(function (details) {
-        console.log(details);
         _this2.activeCombinationDetails = details;
       })["catch"](function (error) {
         Vue.$toast.error("Error: ".concat(error), {
@@ -41221,6 +41224,14 @@ var render = function() {
                     _vm._v(" "),
                     _c("th", { attrs: { scope: "col" } }, [
                       _vm._v(_vm._s(_vm.$t("messages.base_price")))
+                    ]),
+                    _vm._v(" "),
+                    _c("th", { attrs: { scope: "col" } }, [
+                      _vm._v(_vm._s(_vm.$t("messages.ingredients_price")))
+                    ]),
+                    _vm._v(" "),
+                    _c("th", { attrs: { scope: "col" } }, [
+                      _vm._v(_vm._s(_vm.$t("messages.total")))
                     ])
                   ])
                 ]),
@@ -41238,6 +41249,20 @@ var render = function() {
                       _c("td", {
                         domProps: {
                           textContent: _vm._s("$" + combination.base_price)
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("td", {
+                        domProps: {
+                          textContent: _vm._s(
+                            "$" + combination.ingredients_price
+                          )
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("td", {
+                        domProps: {
+                          textContent: _vm._s("$" + combination.total)
                         }
                       }),
                       _vm._v(" "),
@@ -41475,8 +41500,17 @@ var render = function() {
                                 }),
                                 _vm._v(" "),
                                 _c("td", {
+                                  staticStyle: { cursor: "pointer" },
                                   domProps: {
                                     textContent: _vm._s(detail.pizza.name)
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.showCombinationDetails(
+                                        detail.pizza
+                                      )
+                                    }
                                   }
                                 }),
                                 _vm._v(" "),

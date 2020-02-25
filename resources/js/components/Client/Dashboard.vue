@@ -57,6 +57,8 @@
                                     <th scope="col">#</th>
                                     <th scope="col">{{ $t('messages.name') }}</th>
                                     <th scope="col">{{ $t('messages.base_price') }}</th>
+                                    <th scope="col">{{ $t('messages.ingredients_price') }}</th>
+                                    <th scope="col">{{ $t('messages.total') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -64,6 +66,8 @@
                                     <th v-text="++i"></th>
                                     <td v-text="combination.name"></td>
                                     <td v-text="`$${combination.base_price}`"></td>
+                                    <td v-text="`$${combination.ingredients_price}`"></td>
+                                    <td v-text="`$${combination.total}`"></td>
                                     <td>
                                         <a href="#" class="btn btn-default btn-sm" @click.prevent="showCombinationDetails(combination)"><i class="fa fa-eye"></i></a>
                                     </td>
@@ -164,7 +168,7 @@
                             <tbody>
                                 <tr v-for="(detail, i) in activeOrderDetails" :key="detail.id">
                                     <th v-text="++i"></th>
-                                    <td v-text="detail.pizza.name"></td>
+                                    <td style="cursor: pointer;" @click.prevent="showCombinationDetails(detail.pizza)" v-text="detail.pizza.name"></td>
                                     <td class="text-center" v-text="detail.pizza_quantity"></td>
                                     <td class="text-center" v-text="`$${detail.pizza_price}`"></td>
                                     <td class="text-center" v-text="`$${detail.total}`"></td>
@@ -399,7 +403,6 @@
 
                 this.getCombinationDetails(combination)
                 .then(details => {
-                    console.log(details);
                     this.activeCombinationDetails = details;
                 })
                 .catch(error => {
