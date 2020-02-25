@@ -2253,7 +2253,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2279,6 +2278,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     orderTotal: function orderTotal() {
+      // Genera el total del pedido
       var total = 0;
       this.activeOrderDetails.forEach(function (el) {
         return total += el.total;
@@ -2286,6 +2286,7 @@ __webpack_require__.r(__webpack_exports__);
       return total;
     },
     combinationTotal: function combinationTotal() {
+      // Genera el total de la combinación
       var total = 0;
       this.activeCombinationDetails.forEach(function (el) {
         return total += el.total;
@@ -2425,6 +2426,256 @@ __webpack_require__.r(__webpack_exports__);
     this.getPresetCombinations();
     this.getAviableIngredients();
     this.getBranchOffices();
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Client/NewOrder.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Client/NewOrder.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      searchTerm: '',
+      // Término de búsqueda
+      combinations: [],
+      // Elelementos encontrados
+      selectedCombinations: [],
+      // Elementos seleccionados para agregar
+      orderNumber: 0,
+      // Número de pedido
+      tokenSource: null // Permite detener peticiones con axios
+
+    };
+  },
+  watch: {
+    searchTerm: function searchTerm(term) {
+      this.tokenSource.cancel(); // Cancelar petición que se está ejecutando actualmente
+
+      this.createCancelToken(); // Crear nuevo token
+
+      this.searchCombinations(); // Nueva petición
+    }
+  },
+  computed: {
+    orderTotal: function orderTotal() {
+      // Devuelve el total del pedido según los elementos agregados
+      var total = 0;
+      this.selectedCombinations.forEach(function (el) {
+        return total += el.total * el.quantity;
+      });
+      return total.toFixed(2);
+    }
+  },
+  methods: {
+    translate: function translate(key) {
+      // Equivalente a $t en el template
+      return Vue.i18n.translate("messages.".concat(key));
+    },
+    createCancelToken: function createCancelToken() {
+      // Crea token para poder cancelar la petición
+      var CancelToken = axios.CancelToken;
+      this.tokenSource = CancelToken.source();
+    },
+    loadOrderNumber: function loadOrderNumber() {
+      var _this = this;
+
+      var url = "last-order";
+      axios.get(url).then(function (response) {
+        _this.orderNumber = response.data.data.order_number + 1;
+      })["catch"](function (error) {
+        Vue.$toast.error("Error: ".concat(error), {
+          position: 'top-right'
+        });
+      });
+    },
+    searchCombinations: function searchCombinations() {
+      var _this2 = this;
+
+      // Busca combinaciones
+      var url = "pizzas?q=".concat(this.searchTerm);
+      axios.get(url, {
+        cancelToken: this.tokenSource.token
+      }).then(function (response) {
+        _this2.combinations = response.data.data;
+      })["catch"](function (error) {
+        if (axios.isCancel(error)) {
+          console.log('Peticion cancelada: ', error.message);
+        } else {
+          Vue.$toast.error("Error: ".concat(error), {
+            position: 'top-right'
+          });
+        }
+      });
+    },
+    addCombination: function addCombination(combination) {
+      // Agrega elementos al pedido
+      var index = this.selectedCombinations.findIndex(function (el) {
+        return el.id == combination.id;
+      }); // Buscar el índice de la combinación
+      // Sumar la cantidad si ya existe el elemento, sino, agregarlo al arreglo
+
+      if (index >= 0) this.selectedCombinations[index].quantity += combination.quantity; // Vue.util.extend sirve para que los cambios que se hagan en el arreglo se actualicen en la vista
+      else this.selectedCombinations.push(Vue.util.extend({}, combination));
+    },
+    removeItem: function removeItem(index) {
+      // Quita un elemento de los seleccionados según el índice
+      this.selectedCombinations.splice(index, 1);
+    },
+    saveOrderDetails: function saveOrderDetails(order, callback) {
+      var _this3 = this;
+
+      // Guarda los detalles del pedido y ejecuta un callback al haber finalizado
+      var i = 0;
+      this.selectedCombinations.forEach(function (el) {
+        var url = "orders/".concat(order, "/pizzas/").concat(el.id, "/order-details");
+        axios.post(url, {
+          pizza_quantity: el.quantity
+        }) // Solamente se envia la cantidad como parámetro, lo demás va en la url
+        .then(function () {
+          if (_this3.selectedCombinations.length == ++i) callback(); // Si ya se terminaron todas las consultas
+        })["catch"](function (error) {
+          throw error;
+        });
+      });
+    },
+    saveOrder: function saveOrder() {
+      // Guarda el pedido
+      var me = this;
+      var url = "clients/".concat(this.$userId, "/orders");
+
+      try {
+        if (this.selectedCombinations.length <= 0) throw this.translate('add_pizzas_message');
+        axios.post(url).then(function (response) {
+          var order = response.data.data.id;
+          me.saveOrderDetails(order, function () {
+            Vue.$toast.success(me.translate('created_order'), {
+              position: 'top-right'
+            });
+            setTimeout(function () {
+              window.location = '/';
+            }, 1000);
+          });
+        })["catch"](function (error) {
+          throw error;
+        });
+      } catch (error) {
+        Vue.$toast.error("Error: ".concat(error), {
+          position: 'top-right'
+        });
+        return;
+      }
+    }
+  },
+  mounted: function mounted() {
+    this.createCancelToken();
+    this.loadOrderNumber();
+    this.searchCombinations();
   }
 });
 
@@ -41096,10 +41347,10 @@ var render = function() {
             { staticClass: "d-flex justify-content-center bd-highlight mb-3" },
             [
               _c(
-                "button",
+                "a",
                 {
                   staticClass: "btn btn-lg btn-block btn-success col-md-2",
-                  attrs: { type: "button" }
+                  attrs: { href: "new-order" }
                 },
                 [_vm._v(_vm._s(_vm.$t("messages.new_order")))]
               )
@@ -41797,6 +42048,382 @@ var render = function() {
   )
 }
 var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Client/NewOrder.vue?vue&type=template&id=04ea4a52&":
+/*!******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Client/NewOrder.vue?vue&type=template&id=04ea4a52& ***!
+  \******************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container-fluid" }, [
+    _c(
+      "div",
+      { staticClass: "px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" },
+      [_c("h3", [_vm._v(_vm._s(_vm.$t("messages.new_order")))])]
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "card-deck mb-3 text-center" }, [
+      _c("div", { staticClass: "col-md-6" }, [
+        _c("div", { staticClass: "card mb-4 box-shadow" }, [
+          _c("div", { staticClass: "card-header bg-primary text-white" }, [
+            _vm._v(
+              "\n                    " +
+                _vm._s(_vm.$t("messages.select_pizzas")) +
+                "\n                "
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("form", { staticClass: "form-inline mb-3" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.searchTerm,
+                    expression: "searchTerm"
+                  }
+                ],
+                staticClass: "form-control col-md-5 ml-3 w-75",
+                attrs: {
+                  type: "text",
+                  placeholder: _vm.$t("messages.search"),
+                  "aria-label": "Search"
+                },
+                domProps: { value: _vm.searchTerm },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.searchTerm = $event.target.value
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "a",
+                {
+                  staticClass: "btn btn-outline-success",
+                  attrs: { href: "#" }
+                },
+                [_vm._v(_vm._s(_vm.$t("messages.new")))]
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "pr-2",
+                staticStyle: { "max-height": "300px", "overflow-y": "auto" }
+              },
+              [
+                _c("table", { staticClass: "table table-striped table-sm" }, [
+                  _c("thead", [
+                    _c("tr", [
+                      _c("th", { staticStyle: { "font-size": "0.9em" } }, [
+                        _vm._v(_vm._s(_vm.$t("messages.name")))
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticStyle: { "font-size": "0.9em" } }, [
+                        _vm._v(_vm._s(_vm.$t("messages.base_price")))
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticStyle: { "font-size": "0.9em" } }, [
+                        _vm._v(_vm._s(_vm.$t("messages.ingredients_price")))
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticStyle: { "font-size": "0.9em" } }, [
+                        _vm._v(_vm._s(_vm.$t("messages.total")))
+                      ]),
+                      _vm._v(" "),
+                      _c("th")
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.combinations, function(combination) {
+                      return _c("tr", { key: combination.id }, [
+                        _c("td", {
+                          staticClass: "text-left",
+                          domProps: { textContent: _vm._s(combination.name) }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          staticClass: "text-right",
+                          domProps: {
+                            textContent: _vm._s("$" + combination.base_price)
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          staticClass: "text-right",
+                          domProps: {
+                            textContent: _vm._s(
+                              "$" + combination.ingredients_price
+                            )
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          staticClass: "text-right",
+                          domProps: {
+                            textContent: _vm._s("$" + combination.total)
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("td", { staticStyle: { "max-width": "80px" } }, [
+                          _c(
+                            "form",
+                            {
+                              on: {
+                                submit: function($event) {
+                                  $event.preventDefault()
+                                  return _vm.addCombination(combination)
+                                }
+                              }
+                            },
+                            [
+                              _c(
+                                "div",
+                                { staticClass: "input-group input-group-sm" },
+                                [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model.number",
+                                        value: combination.quantity,
+                                        expression: "combination.quantity",
+                                        modifiers: { number: true }
+                                      }
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: {
+                                      type: "number",
+                                      min: "1",
+                                      max: "50",
+                                      required: ""
+                                    },
+                                    domProps: { value: combination.quantity },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          combination,
+                                          "quantity",
+                                          _vm._n($event.target.value)
+                                        )
+                                      },
+                                      blur: function($event) {
+                                        return _vm.$forceUpdate()
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _vm._m(0, true)
+                                ]
+                              )
+                            ]
+                          )
+                        ])
+                      ])
+                    }),
+                    0
+                  )
+                ])
+              ]
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-6" }, [
+        _c("div", { staticClass: "card mb-4 box-shadow" }, [
+          _c("div", { staticClass: "card-header bg-primary text-white" }, [
+            _vm._v(
+              "\n                    " +
+                _vm._s(_vm.$t("messages.order_detail")) +
+                "\n                "
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "mb-2" }, [
+              _c("strong", [
+                _vm._v(_vm._s(_vm.$t("messages.order_number")) + ":")
+              ]),
+              _vm._v(" \n                        "),
+              _c("span", {
+                staticStyle: { "font-size": "0.9em" },
+                domProps: { textContent: _vm._s(_vm.orderNumber) }
+              })
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "pr-2",
+                staticStyle: { "max-height": "300px", "overflow-y": "auto" }
+              },
+              [
+                _c("table", { staticClass: "table table-striped table-sm" }, [
+                  _c("thead", [
+                    _c("tr", [
+                      _c("th", { staticStyle: { "font-size": "0.9em" } }, [
+                        _vm._v(_vm._s(_vm.$t("messages.name")))
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticStyle: { "font-size": "0.9em" } }, [
+                        _vm._v(_vm._s(_vm.$t("messages.price")))
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticStyle: { "font-size": "0.9em" } }, [
+                        _vm._v(_vm._s(_vm.$t("messages.quantity")))
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticStyle: { "font-size": "0.9em" } }, [
+                        _vm._v("Subtotal")
+                      ]),
+                      _vm._v(" "),
+                      _c("th")
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    [
+                      _vm._l(_vm.selectedCombinations, function(
+                        combination,
+                        i
+                      ) {
+                        return _c("tr", { key: combination.id }, [
+                          _c("td", {
+                            staticClass: "text-left",
+                            domProps: { textContent: _vm._s(combination.name) }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            staticClass: "text-right",
+                            domProps: {
+                              textContent: _vm._s("$" + combination.total)
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            staticClass: "text-right",
+                            domProps: {
+                              textContent: _vm._s(combination.quantity)
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            staticClass: "text-right",
+                            domProps: {
+                              textContent: _vm._s(
+                                "$" +
+                                  Number(
+                                    combination.total * combination.quantity
+                                  ).toFixed(2)
+                              )
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c(
+                              "a",
+                              {
+                                staticClass: "btn btn-outline-danger btn-sm",
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.removeItem(i)
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "fa fa-trash" })]
+                            )
+                          ])
+                        ])
+                      }),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _c(
+                          "td",
+                          {
+                            staticClass: "text-right",
+                            attrs: { colspan: "3" }
+                          },
+                          [_vm._v("Total")]
+                        ),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-right" }, [
+                          _c("strong", {
+                            domProps: {
+                              textContent: _vm._s("$" + _vm.orderTotal)
+                            }
+                          })
+                        ])
+                      ])
+                    ],
+                    2
+                  )
+                ])
+              ]
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-6 mx-auto" }, [
+        _c(
+          "a",
+          {
+            staticClass: "btn btn-success",
+            attrs: { href: "#" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.saveOrder($event)
+              }
+            }
+          },
+          [_vm._v(_vm._s(_vm.$t("messages.save_order")))]
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c("button", { staticClass: "btn btn-success btn-sm" }, [
+        _c("i", { staticClass: "fa fa-shopping-cart" })
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -63273,7 +63900,8 @@ var meta = document.querySelector("meta[name='user-id']");
 Vue.prototype.$userId = meta ? meta.getAttribute('content') : null; // Componentes personalizados
 
 Vue.component('stack-modal', _innologica_vue_stackable_modal__WEBPACK_IMPORTED_MODULE_5___default.a);
-Vue.component('client-home', __webpack_require__(/*! ./components/Client/Dashboard.vue */ "./resources/js/components/Client/Dashboard.vue")["default"]); // URL base para las peticiones con axios
+Vue.component('client-home', __webpack_require__(/*! ./components/Client/Dashboard.vue */ "./resources/js/components/Client/Dashboard.vue")["default"]);
+Vue.component('new-order', __webpack_require__(/*! ./components/Client/NewOrder.vue */ "./resources/js/components/Client/NewOrder.vue")["default"]); // URL base para las peticiones con axios
 
 axios.defaults.baseURL = 'http://localhost:8000';
 var app = new Vue({
@@ -63415,6 +64043,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/Client/NewOrder.vue":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/Client/NewOrder.vue ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _NewOrder_vue_vue_type_template_id_04ea4a52___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./NewOrder.vue?vue&type=template&id=04ea4a52& */ "./resources/js/components/Client/NewOrder.vue?vue&type=template&id=04ea4a52&");
+/* harmony import */ var _NewOrder_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./NewOrder.vue?vue&type=script&lang=js& */ "./resources/js/components/Client/NewOrder.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _NewOrder_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _NewOrder_vue_vue_type_template_id_04ea4a52___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _NewOrder_vue_vue_type_template_id_04ea4a52___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Client/NewOrder.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Client/NewOrder.vue?vue&type=script&lang=js&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/Client/NewOrder.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_NewOrder_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./NewOrder.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Client/NewOrder.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_NewOrder_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Client/NewOrder.vue?vue&type=template&id=04ea4a52&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/Client/NewOrder.vue?vue&type=template&id=04ea4a52& ***!
+  \************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NewOrder_vue_vue_type_template_id_04ea4a52___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./NewOrder.vue?vue&type=template&id=04ea4a52& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Client/NewOrder.vue?vue&type=template&id=04ea4a52&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NewOrder_vue_vue_type_template_id_04ea4a52___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NewOrder_vue_vue_type_template_id_04ea4a52___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/vue-i18n-locales.generated.js":
 /*!****************************************************!*\
   !*** ./resources/js/vue-i18n-locales.generated.js ***!
@@ -63465,7 +64162,15 @@ __webpack_require__.r(__webpack_exports__);
       "combination_detail": "Combination detail",
       "ingredient": "Ingredient",
       "ingredients": "Ingredients",
-      "ingredients_price": "Ingredients price"
+      "ingredients_price": "Ingredients price",
+      "new-order": "New order",
+      "select_pizzas": "Select the pizzas",
+      "selected_pizzas": "Selected pizzas",
+      "search": "Search",
+      "new": "New",
+      "save_order": "Save Order",
+      "add_pizzas_message": "You must add pizzas at the order",
+      "created_order": "Success! Order registered correctly"
     },
     "pagination": {
       "previous": "&laquo; Previous",
@@ -63631,7 +64336,15 @@ __webpack_require__.r(__webpack_exports__);
       "combination_detail": "Detalle de combinación",
       "ingredient": "Ingrediente",
       "ingredients": "Ingredientes",
-      "ingredients_price": "Precio ingredientes"
+      "ingredients_price": "Precio ingredientes",
+      "new-order": "Nuevo pedido",
+      "select_pizzas": "Seleccione las pizzas",
+      "selected_pizzas": "Pizzas seleccionadas",
+      "search": "Buscar",
+      "new": "Nuevo",
+      "save_order": "Guardar pedido",
+      "add_pizzas_message": "Debe agregar pizzas al pedido",
+      "created_order": "¡Hecho! Pedido ingresado correctamente"
     },
     "passwords": {
       "reset": "¡Su contraseña ha sido restablecida!",

@@ -35,6 +35,7 @@ Vue.prototype.$userId = meta ? meta.getAttribute('content') : null;
 // Componentes personalizados
 Vue.component('stack-modal', StackModal);
 Vue.component('client-home', require('./components/Client/Dashboard.vue').default);
+Vue.component('new-order', require('./components/Client/NewOrder.vue').default);
 
 // URL base para las peticiones con axios
 axios.defaults.baseURL = 'http://localhost:8000';

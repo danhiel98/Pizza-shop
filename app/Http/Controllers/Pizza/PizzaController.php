@@ -15,7 +15,7 @@ class PizzaController extends Controller
      */
     public function index()
     {
-        $pizzas = Pizza::all();
+        $pizzas = request()->has('q') ? Pizza::search(request()->q)->get() : Pizza::all();
 
         return $this->showAll($pizzas);
     }

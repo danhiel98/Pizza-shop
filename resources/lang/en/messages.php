@@ -35,5 +35,13 @@ return [
     'combination_detail'  => 'Combination detail',
     'ingredient'          => 'Ingredient',
     'ingredients'         => 'Ingredients',
-    'ingredients_price'   => 'Ingredients price'
+    'ingredients_price'   => 'Ingredients price',
+    'new-order'           => 'New order',
+    'select_pizzas'       => 'Select the pizzas',
+    'selected_pizzas'     => 'Selected pizzas',
+    'search'              => 'Search',
+    'new'                 => 'New',
+    'save_order'          => 'Save Order',
+    'add_pizzas_message'  => 'You must add pizzas at the order',
+    'created_order'       => 'Success! Order registered correctly'
 ];

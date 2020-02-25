@@ -39,7 +39,15 @@ export default {
             "combination_detail": "Combination detail",
             "ingredient": "Ingredient",
             "ingredients": "Ingredients",
-            "ingredients_price": "Ingredients price"
+            "ingredients_price": "Ingredients price",
+            "new-order": "New order",
+            "select_pizzas": "Select the pizzas",
+            "selected_pizzas": "Selected pizzas",
+            "search": "Search",
+            "new": "New",
+            "save_order": "Save Order",
+            "add_pizzas_message": "You must add pizzas at the order",
+            "created_order": "Success! Order registered correctly"
         },
         "pagination": {
             "previous": "&laquo; Previous",
@@ -205,7 +213,15 @@ export default {
             "combination_detail": "Detalle de combinación",
             "ingredient": "Ingrediente",
             "ingredients": "Ingredientes",
-            "ingredients_price": "Precio ingredientes"
+            "ingredients_price": "Precio ingredientes",
+            "new-order": "Nuevo pedido",
+            "select_pizzas": "Seleccione las pizzas",
+            "selected_pizzas": "Pizzas seleccionadas",
+            "search": "Buscar",
+            "new": "Nuevo",
+            "save_order": "Guardar pedido",
+            "add_pizzas_message": "Debe agregar pizzas al pedido",
+            "created_order": "¡Hecho! Pedido ingresado correctamente"
         },
         "passwords": {
             "reset": "¡Su contraseña ha sido restablecida!",

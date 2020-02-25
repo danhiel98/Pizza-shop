@@ -1,10 +1,9 @@
 <template>
     <div class="container-fluid">
         <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-            <!-- <h1 class="display-4">{{ $t('messages.title') }}</h1> -->
             <p class="lead">{{ $t('messages.client_message') }}</p>
             <div class="d-flex justify-content-center bd-highlight mb-3">
-                <button type="button" class="btn btn-lg btn-block btn-success col-md-2">{{ $t('messages.new_order') }}</button>
+                <a href="new-order" class="btn btn-lg btn-block btn-success col-md-2">{{ $t('messages.new_order') }}</a>
             </div>
         </div>
         <div class="card-deck mb-3 text-center">
@@ -271,13 +270,13 @@
             }
         },
         computed: {
-            orderTotal(){
+            orderTotal(){ // Genera el total del pedido
                 let total = 0;
                 this.activeOrderDetails.forEach(el => total += el.total);
 
                 return total;
             },
-            combinationTotal(){
+            combinationTotal(){ // Genera el total de la combinación
                 let total = 0;
                 this.activeCombinationDetails.forEach(el => total += el.total);
 

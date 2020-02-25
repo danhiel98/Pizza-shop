@@ -15,11 +15,15 @@ Route::get('lang/{locale}', 'LocalizationController@index');
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
-Route::resource('clients.orders', 'Client\ClientOrderController', ['except' => ['store', 'edit']]);
-Route::resource('ingredients', 'Ingredient\IngredientController', ['except' => ['store', 'edit']]);
-Route::resource('pizzas', 'Pizza\PizzaController', ['except' => ['store', 'edit']]);
+Route::get('/new-order', 'HomeController@new')->name('home');
+Route::get('/last-order', 'HomeController@orderNumber');
+
+Route::resource('clients.orders', 'Client\ClientOrderController', ['except' => ['create', 'edit']]);
+Route::resource('ingredients', 'Ingredient\IngredientController', ['except' => ['create', 'edit']]);
+Route::resource('pizzas', 'Pizza\PizzaController', ['except' => ['create', 'edit']]);
 Route::resource('pizzas.pizza-details', 'Pizza\PizzaDetailController', ['only' => ['index']]);
-Route::resource('branch-offices', 'BranchOffice\BranchOfficeController', ['except' => ['store', 'edit']]);
-Route::resource('orders', 'Order\OrderController', ['except' => ['store', 'edit']]);
-Route::resource('orders.order-details', 'Order\OrderDetailController', ['except' => ['store', 'edit']]);
+Route::resource('branch-offices', 'BranchOffice\BranchOfficeController', ['except' => ['create', 'edit']]);
+Route::resource('orders', 'Order\OrderController', ['except' => ['create', 'edit']]);
+Route::resource('orders.order-details', 'Order\OrderDetailController', ['except' => ['create', 'edit']]);
 Route::resource('orders.pizzas', 'Order\OrderPizzaController', ['only' => ['index']]);
+Route::resource('orders.pizzas.order-details', 'Order\OrderPizzaDetailController', ['only' => ['store']]);

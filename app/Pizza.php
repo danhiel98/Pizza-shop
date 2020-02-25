@@ -5,16 +5,24 @@ namespace App;
 use App\Transformers\PizzaTransformer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Pizza extends Model
 {
     use SoftDeletes;
+    use SearchableTrait;
 
     public $transformer = PizzaTransformer::class;
 
     protected $dates = [ 'deleted_at' ];
 
     protected $hidden = ['pivot'];
+
+    protected $searchable = [
+        'columns' => [
+            'pizzas.name' => 10
+        ]
+    ];
 
     protected $fillable = [
         'name',

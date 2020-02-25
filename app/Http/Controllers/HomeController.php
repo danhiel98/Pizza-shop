@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,7 +16,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except('orderNumber');
     }
 
     /**
@@ -31,5 +32,19 @@ class HomeController extends Controller
             return view('home');
         else
             return view('client.dashboard');
+    }
+
+    public function new()
+    {
+        if (Auth::user()->type == User::NORMAL_USER) return view('home');
+
+        return view('client.new-order');
+    }
+
+    public function orderNumber()
+    {
+        $order = Order::orderBy('id')->get()->last();
+
+        return $this->showOne($order);
     }
 }

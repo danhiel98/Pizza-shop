@@ -35,5 +35,13 @@ return [
     'combination_detail'  => 'Detalle de combinación',
     'ingredient'          => 'Ingrediente',
     'ingredients'         => 'Ingredientes',
-    'ingredients_price'   => 'Precio ingredientes'
+    'ingredients_price'   => 'Precio ingredientes',
+    'new-order'           => 'Nuevo pedido',
+    'select_pizzas'       => 'Seleccione las pizzas',
+    'selected_pizzas'     => 'Pizzas seleccionadas',
+    'search'              => 'Buscar',
+    'new'                 => 'Nuevo',
+    'save_order'          => 'Guardar pedido',
+    'add_pizzas_message'  => 'Debe agregar pizzas al pedido',
+    'created_order'       => '¡Hecho! Pedido ingresado correctamente'
 ];
