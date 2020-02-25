@@ -16,11 +16,6 @@ class PizzaDetail extends Model
         'ingredient_quantity'
     ];
 
-    public function getTotalAttribute()
-    {
-        return $this->ingredient_price * $this->ingredient_quantity;
-    }
-
     public function pizza()
     {
         return $this->belongsTo(Pizza::class);
@@ -29,5 +24,10 @@ class PizzaDetail extends Model
     public function ingredient()
     {
         return $this->belongsTo(Ingredient::class);
+    }
+
+    public function getTotalAttribute()
+    {
+        return $this->ingredient_price * $this->ingredient_quantity;
     }
 }

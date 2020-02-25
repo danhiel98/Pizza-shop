@@ -31,4 +31,9 @@ return [
     'details'             => 'Detalles',
     'pizza_name'          => 'Nombre pizza',
     'quantity'            => 'Cantidad',
+    'close'               => 'Cerrar',
+    'combination_detail'  => 'Detalle de combinación',
+    'ingredient'          => 'Ingrediente',
+    'ingredients'         => 'Ingredientes',
+    'ingredients_price'   => 'Precio ingredientes'
 ];

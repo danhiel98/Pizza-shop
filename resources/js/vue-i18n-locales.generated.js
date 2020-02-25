@@ -34,7 +34,12 @@ export default {
             "order_detail": "Order Detail",
             "details": "Details",
             "pizza_name": "Pizza name",
-            "quantity": "Quantity"
+            "quantity": "Quantity",
+            "close": "Close",
+            "combination_detail": "Combination detail",
+            "ingredient": "Ingredient",
+            "ingredients": "Ingredients",
+            "ingredients_price": "Ingredients price"
         },
         "pagination": {
             "previous": "&laquo; Previous",
@@ -195,7 +200,12 @@ export default {
             "order_detail": "Detalle de pedido",
             "details": "Detalles",
             "pizza_name": "Nombre pizza",
-            "quantity": "Cantidad"
+            "quantity": "Cantidad",
+            "close": "Cerrar",
+            "combination_detail": "Detalle de combinación",
+            "ingredient": "Ingrediente",
+            "ingredients": "Ingredientes",
+            "ingredients_price": "Precio ingredientes"
         },
         "passwords": {
             "reset": "¡Su contraseña ha sido restablecida!",

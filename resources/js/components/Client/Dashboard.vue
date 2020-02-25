@@ -64,6 +64,9 @@
                                     <th v-text="++i"></th>
                                     <td v-text="combination.name"></td>
                                     <td v-text="`$${combination.base_price}`"></td>
+                                    <td>
+                                        <a href="#" class="btn btn-default btn-sm" @click.prevent="showCombinationDetails(combination)"><i class="fa fa-eye"></i></a>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -130,48 +133,109 @@
         <stack-modal
             :show="orderDetailModal"
             :title="`${translate('order_detail')} #${activeOrder ? activeOrder.order_number : ''}`"
-            @close="closeDetailModal"
+            @close="closeOrderDetailModal"
         >
-            <div class="row" v-if="activeOrder">
-                <div class="col-md-4">
-                    <strong>{{ $t('messages.date') }}:</strong>&nbsp;
-                    <span v-text="activeOrder.date"></span>
+            <div class="container">
+                <div class="row" v-if="activeOrder">
+                    <div class="col-md-4">
+                        <strong>{{ $t('messages.date') }}:</strong>&nbsp;
+                        <span style="font-size: 0.9em;" v-text="activeOrder.date"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>{{ $t('messages.pizza_quantity') }}:</strong>&nbsp;
+                        <span v-text="activeOrder.pizza_quantity"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>{{ $t('messages.total') }}:</strong>&nbsp;
+                        <span v-text="`$${activeOrder.total}`"></span>
+                    </div>
+                    <div class="col-md-12">
+                        <strong class="d-flex justify-content-center">{{ $t('messages.details') }}:</strong>
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">{{ $t('messages.pizza_name') }}</th>
+                                    <th class="text-center">{{ $t('messages.quantity') }}</th>
+                                    <th class="text-center">{{ $t('messages.price') }}</th>
+                                    <th class="text-center">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(detail, i) in activeOrderDetails" :key="detail.id">
+                                    <th v-text="++i"></th>
+                                    <td v-text="detail.pizza.name"></td>
+                                    <td class="text-center" v-text="detail.pizza_quantity"></td>
+                                    <td class="text-center" v-text="`$${detail.pizza_price}`"></td>
+                                    <td class="text-center" v-text="`$${detail.total}`"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="text-right">Total</td>
+                                    <td v-text="`$${orderTotal}`"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <strong>{{ $t('messages.pizza_quantity') }}:</strong>&nbsp;
-                    <span v-text="activeOrder.pizza_quantity"></span>
+            </div>
+            <div slot="modal-footer" class="modal-footer">
+                <a href="#" @click.prevent="closeOrderDetailModal" class="btn btn-outline-secondary">{{ translate('close') }}</a>
+            </div>
+        </stack-modal>
+        <stack-modal
+            :show="combinationDetailModal"
+            :title="`${translate('combination_detail')}`"
+            @close="closeCombinationDetailModal"
+        >
+            <div class="container">
+                <div class="row" v-if="activeCombination">
+                    <div class="col-md-12">
+                        <strong>{{ $t('messages.name') }}:</strong>&nbsp;
+                        <span v-text="activeCombination.name"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>{{ $t('messages.base_price') }}:</strong>&nbsp;
+                        <span v-text="`$${activeCombination.base_price}`"></span>
+                    </div>
+                    <div class="col-md-5">
+                        <strong>{{ $t('messages.ingredients_price') }}:</strong>&nbsp;
+                        <span v-text="`$${activeCombination.ingredients_price}`"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>{{ $t('messages.total') }}:</strong>&nbsp;
+                        <span v-text="`$${activeCombination.total}`"></span>
+                    </div>
+                    <div class="col-md-12">
+                        <strong class="d-flex justify-content-center">{{ $t('messages.ingredients') }}:</strong>
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">{{ $t('messages.ingredient') }}</th>
+                                    <th class="text-center">{{ $t('messages.quantity') }}</th>
+                                    <th class="text-center">{{ $t('messages.price') }}</th>
+                                    <th class="text-center">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(detail, i) in activeCombinationDetails" :key="detail.id">
+                                    <td v-text="++i"></td>
+                                    <td v-text="detail.ingredient.name"></td>
+                                    <td class="text-center" v-text="detail.ingredient_quantity"></td>
+                                    <td class="text-center" v-text="`$${detail.ingredient_price}`"></td>
+                                    <td class="text-center" v-text="`$${detail.total}`"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="text-right">Total:</td>
+                                    <td class="text-center" v-text="`$${combinationTotal}`"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <strong>{{ $t('messages.total') }}:</strong>&nbsp;
-                    <span v-text="`$${activeOrder.total}`"></span>
-                </div>
-                <div class="col-md-12">
-                    <strong class="d-flex justify-content-center">{{ $t('messages.details') }}:</strong>
-                    <table class="table table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th class="text-center">{{ $t('messages.pizza_name') }}</th>
-                                <th class="text-center">{{ $t('messages.quantity') }}</th>
-                                <th class="text-center">{{ $t('messages.price') }}</th>
-                                <th class="text-center">Subtotal</th>
-                                <td></td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(detail, i) in activeOrderDetails" :key="detail.id">
-                                <th v-text="++i"></th>
-                                <td v-text="detail.pizza.name"></td>
-                                <td class="text-center" v-text="detail.pizza_quantity"></td>
-                                <td class="text-center" v-text="`$${detail.pizza_price}`"></td>
-                                <td class="text-center" v-text="`$${detail.total}`"></td>
-                                <td>
-                                    <!-- <a href="#" class="btn btn-default btn-sm" @click.prevent="showOrderDetails(order)"><i class="fa fa-eye"></i></a> -->
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            </div>
+            <div slot="modal-footer" class="modal-footer">
+                <a href="#" @click.prevent="closeCombinationDetailModal" class="btn btn-outline-secondary">{{ translate('close') }}</a>
             </div>
         </stack-modal>
     </div>
@@ -196,6 +260,24 @@
                 activeOrder: null, // Pedido a mostrar
                 activeOrderDetails: [],
                 orderDetailModal: false, // Modal para ver el detalle del pedido
+
+                activeCombination: null, // Combinación personalizada a mostrar
+                activeCombinationDetails: [],
+                combinationDetailModal: false, // Modal para ver el detalle de la combinación
+            }
+        },
+        computed: {
+            orderTotal(){
+                let total = 0;
+                this.activeOrderDetails.forEach(el => total += el.total);
+
+                return total;
+            },
+            combinationTotal(){
+                let total = 0;
+                this.activeCombinationDetails.forEach(el => total += el.total);
+
+                return total;
             }
         },
         methods: {
@@ -217,38 +299,6 @@
                 .finally(() => {
                     me.loadingOrderHistory = false;
                 });
-            },
-            getOrderDetails(order){ // Obtener el detalle de un pedido en específico
-                let me = this;
-                let url = `orders/${order.id}/order-details`;
-
-                return new Promise((resolve, reject) => {
-                    axios.get(url)
-                    .then(response => {
-                        resolve(response.data.data);
-                    })
-                    .catch(error => {
-                        reject(error);
-                    });
-                });
-            },
-            showOrderDetails(order){ // Mostrar el detalle del pedido
-                this.activeOrder = order;
-                this.orderDetailModal = true;
-
-                this.activeOrderDetails = [];
-                this.getOrderDetails(order)
-                .then(details => {
-                    this.activeOrderDetails = details;
-                })
-                .catch(error => {
-                    Vue.$toast.error(`Error: ${error}`, { position: 'top-right' });
-                });
-            },
-            closeDetailModal(){
-                this.orderDetailModal = false;
-                this.activeOrder = null;
-                this.activeOrderDetails = null;
             },
             getPresetCombinations(){ // Obtener combinaciones preestablecidas
                 let me = this;
@@ -297,6 +347,69 @@
                 .finally(() => {
                     me.loadingBranchOffices = false;
                 });
+            },
+            getOrderDetails(order){ // Obtener el detalle de un pedido en específico
+                let url = `orders/${order.id}/order-details`;
+
+                return new Promise((resolve, reject) => {
+                    axios.get(url)
+                    .then(response => {
+                        resolve(response.data.data);
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+                });
+            },
+            showOrderDetails(order){ // Mostrar el detalle del pedido
+                this.activeOrder = order;
+                this.orderDetailModal = true;
+                this.activeOrderDetails = [];
+
+                this.getOrderDetails(order)
+                .then(details => {
+                    this.activeOrderDetails = details;
+                })
+                .catch(error => {
+                    Vue.$toast.error(`Error: ${error}`, { position: 'top-right' });
+                });
+            },
+            closeOrderDetailModal(){
+                this.orderDetailModal = false;
+                this.activeOrder = null;
+                this.activeOrderDetails = [];
+            },
+            getCombinationDetails(combination){ // Obtener el detalle de una combinacioón en específico
+                let url = `pizzas/${combination.id}/pizza-details`;
+
+                return new Promise((resolve, reject) => {
+                    axios.get(url)
+                    .then(response => {
+                        resolve(response.data.data);
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+                });
+            },
+            showCombinationDetails(combination){
+                this.activeCombination = combination;
+                this.combinationDetailModal = true;
+                this.activeCombinationDetails = [];
+
+                this.getCombinationDetails(combination)
+                .then(details => {
+                    console.log(details);
+                    this.activeCombinationDetails = details;
+                })
+                .catch(error => {
+                    Vue.$toast.error(`Error: ${error}`, { position: 'top-right' });
+                });
+            },
+            closeCombinationDetailModal(){
+                this.combinationDetailModal = false;
+                this.activeCombination = null;
+                this.activeCombinationDetails = [];
             },
         },
         mounted() {

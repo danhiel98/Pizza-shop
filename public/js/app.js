@@ -2186,6 +2186,70 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2200,9 +2264,30 @@ __webpack_require__.r(__webpack_exports__);
       activeOrder: null,
       // Pedido a mostrar
       activeOrderDetails: [],
-      orderDetailModal: false // Modal para ver el detalle del pedido
+      orderDetailModal: false,
+      // Modal para ver el detalle del pedido
+      activeCombination: null,
+      // Combinación personalizada a mostrar
+      activeCombinationDetails: [],
+      combinationDetailModal: false // Modal para ver el detalle de la combinación
 
     };
+  },
+  computed: {
+    orderTotal: function orderTotal() {
+      var total = 0;
+      this.activeOrderDetails.forEach(function (el) {
+        return total += el.total;
+      });
+      return total;
+    },
+    combinationTotal: function combinationTotal() {
+      var total = 0;
+      this.activeCombinationDetails.forEach(function (el) {
+        return total += el.total;
+      });
+      return total;
+    }
   },
   methods: {
     translate: function translate(key) {
@@ -2223,38 +2308,6 @@ __webpack_require__.r(__webpack_exports__);
       })["finally"](function () {
         me.loadingOrderHistory = false;
       });
-    },
-    getOrderDetails: function getOrderDetails(order) {
-      // Obtener el detalle de un pedido en específico
-      var me = this;
-      var url = "orders/".concat(order.id, "/order-details");
-      return new Promise(function (resolve, reject) {
-        axios.get(url).then(function (response) {
-          resolve(response.data.data);
-        })["catch"](function (error) {
-          reject(error);
-        });
-      });
-    },
-    showOrderDetails: function showOrderDetails(order) {
-      var _this = this;
-
-      // Mostrar el detalle del pedido
-      this.activeOrder = order;
-      this.orderDetailModal = true;
-      this.activeOrderDetails = [];
-      this.getOrderDetails(order).then(function (details) {
-        _this.activeOrderDetails = details;
-      })["catch"](function (error) {
-        Vue.$toast.error("Error: ".concat(error), {
-          position: 'top-right'
-        });
-      });
-    },
-    closeDetailModal: function closeDetailModal() {
-      this.orderDetailModal = false;
-      this.activeOrder = null;
-      this.activeOrderDetails = null;
     },
     getPresetCombinations: function getPresetCombinations() {
       // Obtener combinaciones preestablecidas
@@ -2300,6 +2353,68 @@ __webpack_require__.r(__webpack_exports__);
       })["finally"](function () {
         me.loadingBranchOffices = false;
       });
+    },
+    getOrderDetails: function getOrderDetails(order) {
+      // Obtener el detalle de un pedido en específico
+      var url = "orders/".concat(order.id, "/order-details");
+      return new Promise(function (resolve, reject) {
+        axios.get(url).then(function (response) {
+          resolve(response.data.data);
+        })["catch"](function (error) {
+          reject(error);
+        });
+      });
+    },
+    showOrderDetails: function showOrderDetails(order) {
+      var _this = this;
+
+      // Mostrar el detalle del pedido
+      this.activeOrder = order;
+      this.orderDetailModal = true;
+      this.activeOrderDetails = [];
+      this.getOrderDetails(order).then(function (details) {
+        _this.activeOrderDetails = details;
+      })["catch"](function (error) {
+        Vue.$toast.error("Error: ".concat(error), {
+          position: 'top-right'
+        });
+      });
+    },
+    closeOrderDetailModal: function closeOrderDetailModal() {
+      this.orderDetailModal = false;
+      this.activeOrder = null;
+      this.activeOrderDetails = [];
+    },
+    getCombinationDetails: function getCombinationDetails(combination) {
+      // Obtener el detalle de una combinacioón en específico
+      var url = "pizzas/".concat(combination.id, "/pizza-details");
+      return new Promise(function (resolve, reject) {
+        axios.get(url).then(function (response) {
+          resolve(response.data.data);
+        })["catch"](function (error) {
+          reject(error);
+        });
+      });
+    },
+    showCombinationDetails: function showCombinationDetails(combination) {
+      var _this2 = this;
+
+      this.activeCombination = combination;
+      this.combinationDetailModal = true;
+      this.activeCombinationDetails = [];
+      this.getCombinationDetails(combination).then(function (details) {
+        console.log(details);
+        _this2.activeCombinationDetails = details;
+      })["catch"](function (error) {
+        Vue.$toast.error("Error: ".concat(error), {
+          position: 'top-right'
+        });
+      });
+    },
+    closeCombinationDetailModal: function closeCombinationDetailModal() {
+      this.combinationDetailModal = false;
+      this.activeCombination = null;
+      this.activeCombinationDetails = [];
     }
   },
   mounted: function mounted() {
@@ -41124,7 +41239,24 @@ var render = function() {
                         domProps: {
                           textContent: _vm._s("$" + combination.base_price)
                         }
-                      })
+                      }),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "btn btn-default btn-sm",
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.showCombinationDetails(combination)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fa fa-eye" })]
+                        )
+                      ])
                     ])
                   }),
                   0
@@ -41257,115 +41389,373 @@ var render = function() {
               " #" +
               (_vm.activeOrder ? _vm.activeOrder.order_number : "")
           },
-          on: { close: _vm.closeDetailModal }
+          on: { close: _vm.closeOrderDetailModal }
         },
         [
-          _vm.activeOrder
-            ? _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-md-4" }, [
-                  _c("strong", [_vm._v(_vm._s(_vm.$t("messages.date")) + ":")]),
-                  _vm._v(" \n                "),
-                  _c("span", {
-                    domProps: { textContent: _vm._s(_vm.activeOrder.date) }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-4" }, [
-                  _c("strong", [
-                    _vm._v(_vm._s(_vm.$t("messages.pizza_quantity")) + ":")
-                  ]),
-                  _vm._v(" \n                "),
-                  _c("span", {
-                    domProps: {
-                      textContent: _vm._s(_vm.activeOrder.pizza_quantity)
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-4" }, [
-                  _c("strong", [
-                    _vm._v(_vm._s(_vm.$t("messages.total")) + ":")
-                  ]),
-                  _vm._v(" \n                "),
-                  _c("span", {
-                    domProps: {
-                      textContent: _vm._s("$" + _vm.activeOrder.total)
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-12" }, [
-                  _c(
-                    "strong",
-                    { staticClass: "d-flex justify-content-center" },
-                    [_vm._v(_vm._s(_vm.$t("messages.details")) + ":")]
-                  ),
-                  _vm._v(" "),
-                  _c("table", { staticClass: "table table-striped table-sm" }, [
-                    _c("thead", [
-                      _c("tr", [
-                        _c("th", { staticClass: "text-center" }, [_vm._v("#")]),
-                        _vm._v(" "),
-                        _c("th", { staticClass: "text-center" }, [
-                          _vm._v(_vm._s(_vm.$t("messages.pizza_name")))
-                        ]),
-                        _vm._v(" "),
-                        _c("th", { staticClass: "text-center" }, [
-                          _vm._v(_vm._s(_vm.$t("messages.quantity")))
-                        ]),
-                        _vm._v(" "),
-                        _c("th", { staticClass: "text-center" }, [
-                          _vm._v(_vm._s(_vm.$t("messages.price")))
-                        ]),
-                        _vm._v(" "),
-                        _c("th", { staticClass: "text-center" }, [
-                          _vm._v("Subtotal")
-                        ]),
-                        _vm._v(" "),
-                        _c("td")
-                      ])
+          _c("div", { staticClass: "container" }, [
+            _vm.activeOrder
+              ? _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _c("strong", [
+                      _vm._v(_vm._s(_vm.$t("messages.date")) + ":")
                     ]),
+                    _vm._v(" \n                    "),
+                    _c("span", {
+                      staticStyle: { "font-size": "0.9em" },
+                      domProps: { textContent: _vm._s(_vm.activeOrder.date) }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _c("strong", [
+                      _vm._v(_vm._s(_vm.$t("messages.pizza_quantity")) + ":")
+                    ]),
+                    _vm._v(" \n                    "),
+                    _c("span", {
+                      domProps: {
+                        textContent: _vm._s(_vm.activeOrder.pizza_quantity)
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _c("strong", [
+                      _vm._v(_vm._s(_vm.$t("messages.total")) + ":")
+                    ]),
+                    _vm._v(" \n                    "),
+                    _c("span", {
+                      domProps: {
+                        textContent: _vm._s("$" + _vm.activeOrder.total)
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-12" }, [
+                    _c(
+                      "strong",
+                      { staticClass: "d-flex justify-content-center" },
+                      [_vm._v(_vm._s(_vm.$t("messages.details")) + ":")]
+                    ),
                     _vm._v(" "),
                     _c(
-                      "tbody",
-                      _vm._l(_vm.activeOrderDetails, function(detail, i) {
-                        return _c("tr", { key: detail.id }, [
-                          _c("th", { domProps: { textContent: _vm._s(++i) } }),
-                          _vm._v(" "),
-                          _c("td", {
-                            domProps: { textContent: _vm._s(detail.pizza.name) }
-                          }),
-                          _vm._v(" "),
-                          _c("td", {
-                            staticClass: "text-center",
-                            domProps: {
-                              textContent: _vm._s(detail.pizza_quantity)
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("td", {
-                            staticClass: "text-center",
-                            domProps: {
-                              textContent: _vm._s("$" + detail.pizza_price)
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("td", {
-                            staticClass: "text-center",
-                            domProps: {
-                              textContent: _vm._s("$" + detail.total)
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("td")
-                        ])
-                      }),
-                      0
+                      "table",
+                      { staticClass: "table table-striped table-sm" },
+                      [
+                        _c("thead", [
+                          _c("tr", [
+                            _c("th", { staticClass: "text-center" }, [
+                              _vm._v("#")
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-center" }, [
+                              _vm._v(_vm._s(_vm.$t("messages.pizza_name")))
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-center" }, [
+                              _vm._v(_vm._s(_vm.$t("messages.quantity")))
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-center" }, [
+                              _vm._v(_vm._s(_vm.$t("messages.price")))
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-center" }, [
+                              _vm._v("Subtotal")
+                            ])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "tbody",
+                          [
+                            _vm._l(_vm.activeOrderDetails, function(detail, i) {
+                              return _c("tr", { key: detail.id }, [
+                                _c("th", {
+                                  domProps: { textContent: _vm._s(++i) }
+                                }),
+                                _vm._v(" "),
+                                _c("td", {
+                                  domProps: {
+                                    textContent: _vm._s(detail.pizza.name)
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("td", {
+                                  staticClass: "text-center",
+                                  domProps: {
+                                    textContent: _vm._s(detail.pizza_quantity)
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("td", {
+                                  staticClass: "text-center",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      "$" + detail.pizza_price
+                                    )
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("td", {
+                                  staticClass: "text-center",
+                                  domProps: {
+                                    textContent: _vm._s("$" + detail.total)
+                                  }
+                                })
+                              ])
+                            }),
+                            _vm._v(" "),
+                            _c("tr", [
+                              _c(
+                                "td",
+                                {
+                                  staticClass: "text-right",
+                                  attrs: { colspan: "4" }
+                                },
+                                [_vm._v("Total")]
+                              ),
+                              _vm._v(" "),
+                              _c("td", {
+                                domProps: {
+                                  textContent: _vm._s("$" + _vm.orderTotal)
+                                }
+                              })
+                            ])
+                          ],
+                          2
+                        )
+                      ]
                     )
                   ])
                 ])
-              ])
-            : _vm._e()
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "modal-footer",
+              attrs: { slot: "modal-footer" },
+              slot: "modal-footer"
+            },
+            [
+              _c(
+                "a",
+                {
+                  staticClass: "btn btn-outline-secondary",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.closeOrderDetailModal($event)
+                    }
+                  }
+                },
+                [_vm._v(_vm._s(_vm.translate("close")))]
+              )
+            ]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "stack-modal",
+        {
+          attrs: {
+            show: _vm.combinationDetailModal,
+            title: "" + _vm.translate("combination_detail")
+          },
+          on: { close: _vm.closeCombinationDetailModal }
+        },
+        [
+          _c("div", { staticClass: "container" }, [
+            _vm.activeCombination
+              ? _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-md-12" }, [
+                    _c("strong", [
+                      _vm._v(_vm._s(_vm.$t("messages.name")) + ":")
+                    ]),
+                    _vm._v(" \n                    "),
+                    _c("span", {
+                      domProps: {
+                        textContent: _vm._s(_vm.activeCombination.name)
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _c("strong", [
+                      _vm._v(_vm._s(_vm.$t("messages.base_price")) + ":")
+                    ]),
+                    _vm._v(" \n                    "),
+                    _c("span", {
+                      domProps: {
+                        textContent: _vm._s(
+                          "$" + _vm.activeCombination.base_price
+                        )
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-5" }, [
+                    _c("strong", [
+                      _vm._v(_vm._s(_vm.$t("messages.ingredients_price")) + ":")
+                    ]),
+                    _vm._v(" \n                    "),
+                    _c("span", {
+                      domProps: {
+                        textContent: _vm._s(
+                          "$" + _vm.activeCombination.ingredients_price
+                        )
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-3" }, [
+                    _c("strong", [
+                      _vm._v(_vm._s(_vm.$t("messages.total")) + ":")
+                    ]),
+                    _vm._v(" \n                    "),
+                    _c("span", {
+                      domProps: {
+                        textContent: _vm._s("$" + _vm.activeCombination.total)
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-12" }, [
+                    _c(
+                      "strong",
+                      { staticClass: "d-flex justify-content-center" },
+                      [_vm._v(_vm._s(_vm.$t("messages.ingredients")) + ":")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "table",
+                      { staticClass: "table table-striped table-sm" },
+                      [
+                        _c("thead", [
+                          _c("tr", [
+                            _c("th", { staticClass: "text-center" }, [
+                              _vm._v("#")
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-center" }, [
+                              _vm._v(_vm._s(_vm.$t("messages.ingredient")))
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-center" }, [
+                              _vm._v(_vm._s(_vm.$t("messages.quantity")))
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-center" }, [
+                              _vm._v(_vm._s(_vm.$t("messages.price")))
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-center" }, [
+                              _vm._v("Subtotal")
+                            ])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "tbody",
+                          [
+                            _vm._l(_vm.activeCombinationDetails, function(
+                              detail,
+                              i
+                            ) {
+                              return _c("tr", { key: detail.id }, [
+                                _c("td", {
+                                  domProps: { textContent: _vm._s(++i) }
+                                }),
+                                _vm._v(" "),
+                                _c("td", {
+                                  domProps: {
+                                    textContent: _vm._s(detail.ingredient.name)
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("td", {
+                                  staticClass: "text-center",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      detail.ingredient_quantity
+                                    )
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("td", {
+                                  staticClass: "text-center",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      "$" + detail.ingredient_price
+                                    )
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("td", {
+                                  staticClass: "text-center",
+                                  domProps: {
+                                    textContent: _vm._s("$" + detail.total)
+                                  }
+                                })
+                              ])
+                            }),
+                            _vm._v(" "),
+                            _c("tr", [
+                              _c(
+                                "td",
+                                {
+                                  staticClass: "text-right",
+                                  attrs: { colspan: "4" }
+                                },
+                                [_vm._v("Total:")]
+                              ),
+                              _vm._v(" "),
+                              _c("td", {
+                                staticClass: "text-center",
+                                domProps: {
+                                  textContent: _vm._s(
+                                    "$" + _vm.combinationTotal
+                                  )
+                                }
+                              })
+                            ])
+                          ],
+                          2
+                        )
+                      ]
+                    )
+                  ])
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "modal-footer",
+              attrs: { slot: "modal-footer" },
+              slot: "modal-footer"
+            },
+            [
+              _c(
+                "a",
+                {
+                  staticClass: "btn btn-outline-secondary",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.closeCombinationDetailModal($event)
+                    }
+                  }
+                },
+                [_vm._v(_vm._s(_vm.translate("close")))]
+              )
+            ]
+          )
         ]
       )
     ],
@@ -63036,7 +63426,12 @@ __webpack_require__.r(__webpack_exports__);
       "order_detail": "Order Detail",
       "details": "Details",
       "pizza_name": "Pizza name",
-      "quantity": "Quantity"
+      "quantity": "Quantity",
+      "close": "Close",
+      "combination_detail": "Combination detail",
+      "ingredient": "Ingredient",
+      "ingredients": "Ingredients",
+      "ingredients_price": "Ingredients price"
     },
     "pagination": {
       "previous": "&laquo; Previous",
@@ -63197,7 +63592,12 @@ __webpack_require__.r(__webpack_exports__);
       "order_detail": "Detalle de pedido",
       "details": "Detalles",
       "pizza_name": "Nombre pizza",
-      "quantity": "Cantidad"
+      "quantity": "Cantidad",
+      "close": "Cerrar",
+      "combination_detail": "Detalle de combinación",
+      "ingredient": "Ingrediente",
+      "ingredients": "Ingredientes",
+      "ingredients_price": "Precio ingredientes"
     },
     "passwords": {
       "reset": "¡Su contraseña ha sido restablecida!",
