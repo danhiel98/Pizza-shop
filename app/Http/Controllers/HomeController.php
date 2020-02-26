@@ -30,7 +30,7 @@ class HomeController extends Controller
         $userType = Auth::user()->type;
 
         if ($userType == User::NORMAL_USER)
-            return view('home');
+            return view('admin.dashboard');
         else
             return view('client.dashboard');
     }

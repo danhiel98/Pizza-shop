@@ -18,7 +18,7 @@ class Order extends Model
 
     protected $fillable = [
         'order_number',
-        'client_id'
+        'client_id',
     ];
 
     public function getDateAttribute()

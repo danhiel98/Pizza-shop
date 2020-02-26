@@ -57,7 +57,9 @@ export default {
             "add_ingredients_message": "You must add ingredients",
             "created_combination": "Success! Combination created correctly",
             "required_name_message": "You must insert a combination name",
-            "combination_message_exists": "There is already a combination with this name"
+            "combination_message_exists": "There is already a combination with this name",
+            "welcome_message": "Welcome!",
+            "usual_customers": "Usual customers"
         },
         "pagination": {
             "previous": "&laquo; Previous",
@@ -241,7 +243,9 @@ export default {
             "add_ingredients_message": "Debe agregar ingredientes",
             "created_combination": "¡Hecho! Combinación creada correctamente",
             "required_name_message": "Debe ingresar e nombre de la combinación",
-            "combination_message_exists": "Ya existe una combinacion con este nombre"
+            "combination_message_exists": "Ya existe una combinacion con este nombre",
+            "welcome_message": "¡Bienvenido!",
+            "usual_customers": "Clientes frecuentes"
         },
         "passwords": {
             "reset": "¡Su contraseña ha sido restablecida!",

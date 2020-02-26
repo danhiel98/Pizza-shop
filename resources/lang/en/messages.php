@@ -53,5 +53,7 @@ return [
     'add_ingredients_message'    => 'You must add ingredients',
     'created_combination'        => 'Success! Combination created correctly',
     'required_name_message'      => 'You must insert a combination name',
-    'combination_message_exists' => 'There is already a combination with this name'
+    'combination_message_exists' => 'There is already a combination with this name',
+    'welcome_message'            => 'Welcome!',
+    'usual_customers'            => 'Usual customers'
 ];
