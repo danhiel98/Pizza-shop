@@ -2386,6 +2386,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     closeOrderDetailModal: function closeOrderDetailModal() {
+      // Cierra los modales para ver detalles de los pedidos y restablece variables
       this.orderDetailModal = false;
       this.activeOrder = null;
       this.activeOrderDetails = [];
@@ -2404,6 +2405,7 @@ __webpack_require__.r(__webpack_exports__);
     showCombinationDetails: function showCombinationDetails(combination) {
       var _this2 = this;
 
+      // Muestra los detalles de las combinaciones
       this.activeCombination = combination;
       this.combinationDetailModal = true;
       this.activeCombinationDetails = [];
@@ -2416,6 +2418,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     closeCombinationDetailModal: function closeCombinationDetailModal() {
+      // Cierra los modales para registro de combinaciones y limpia las variables
       this.combinationDetailModal = false;
       this.activeCombination = null;
       this.activeCombinationDetails = [];
@@ -2538,6 +2541,108 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2547,10 +2652,19 @@ __webpack_require__.r(__webpack_exports__);
       // Elelementos encontrados
       selectedCombinations: [],
       // Elementos seleccionados para agregar
+      ingredients: [],
+      // Lista de ingredientes
+      selectedIngredients: [],
+      // Ingredientes seleccionados
       orderNumber: 0,
       // Número de pedido
-      tokenSource: null // Permite detener peticiones con axios
-
+      tokenSource: null,
+      // Permite detener peticiones con axios
+      combinationName: '',
+      newCombinationModal: false,
+      // Modal para registrar una nueva pizza personalizada
+      combinationDetailModal: false,
+      defaults: null
     };
   },
   watch: {
@@ -2570,6 +2684,19 @@ __webpack_require__.r(__webpack_exports__);
         return total += el.total * el.quantity;
       });
       return total.toFixed(2);
+    },
+    ingredientsTotal: function ingredientsTotal() {
+      var total = 0;
+      this.selectedIngredients.forEach(function (el) {
+        return total += el.quantity * el.price;
+      });
+      return total.toFixed(2);
+    },
+    basePrice: function basePrice() {
+      return this.defaults ? Number(this.defaults.pizza_base_price) : 0;
+    },
+    combinationTotal: function combinationTotal() {
+      return Number(this.ingredientsTotal) + Number(this.basePrice);
     }
   },
   methods: {
@@ -2594,15 +2721,40 @@ __webpack_require__.r(__webpack_exports__);
         });
       });
     },
-    searchCombinations: function searchCombinations() {
+    getDefaults: function getDefaults() {
       var _this2 = this;
+
+      // Se obtienen datos globales (precio de la base de la pizza)
+      var url = "configs";
+      axios.get(url).then(function (response) {
+        _this2.defaults = response.data.data;
+      })["catch"](function (error) {
+        Vue.$toast.error("Error: ".concat(error), {
+          position: 'top-right'
+        });
+      });
+    },
+    getIngredients: function getIngredients() {
+      var _this3 = this;
+
+      var url = "ingredients";
+      axios.get(url).then(function (response) {
+        _this3.ingredients = response.data.data;
+      })["catch"](function (error) {
+        Vue.$toast.error("Error: ".concat(error), {
+          position: 'top-right'
+        });
+      });
+    },
+    searchCombinations: function searchCombinations() {
+      var _this4 = this;
 
       // Busca combinaciones
       var url = "pizzas?q=".concat(this.searchTerm);
       axios.get(url, {
         cancelToken: this.tokenSource.token
       }).then(function (response) {
-        _this2.combinations = response.data.data;
+        _this4.combinations = response.data.data;
       })["catch"](function (error) {
         if (axios.isCancel(error)) {
           console.log('Peticion cancelada: ', error.message);
@@ -2613,22 +2765,8 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    addCombination: function addCombination(combination) {
-      // Agrega elementos al pedido
-      var index = this.selectedCombinations.findIndex(function (el) {
-        return el.id == combination.id;
-      }); // Buscar el índice de la combinación
-      // Sumar la cantidad si ya existe el elemento, sino, agregarlo al arreglo
-
-      if (index >= 0) this.selectedCombinations[index].quantity += combination.quantity; // Vue.util.extend sirve para que los cambios que se hagan en el arreglo se actualicen en la vista
-      else this.selectedCombinations.push(Vue.util.extend({}, combination));
-    },
-    removeItem: function removeItem(index) {
-      // Quita un elemento de los seleccionados según el índice
-      this.selectedCombinations.splice(index, 1);
-    },
     saveOrderDetails: function saveOrderDetails(order, callback) {
-      var _this3 = this;
+      var _this5 = this;
 
       // Guarda los detalles del pedido y ejecuta un callback al haber finalizado
       var i = 0;
@@ -2638,7 +2776,7 @@ __webpack_require__.r(__webpack_exports__);
           pizza_quantity: el.quantity
         }) // Solamente se envia la cantidad como parámetro, lo demás va en la url
         .then(function () {
-          if (_this3.selectedCombinations.length == ++i) callback(); // Si ya se terminaron todas las consultas
+          if (_this5.selectedCombinations.length == ++i) callback(); // Si ya se terminaron todas las consultas
         })["catch"](function (error) {
           throw error;
         });
@@ -2670,10 +2808,103 @@ __webpack_require__.r(__webpack_exports__);
         });
         return;
       }
+    },
+    closeNewCombinationModal: function closeNewCombinationModal() {
+      this.newCombinationModal = false;
+    },
+    addCombination: function addCombination(combination) {
+      // Agrega elementos al pedido
+      var index = this.selectedCombinations.findIndex(function (el) {
+        return el.id == combination.id;
+      }); // Buscar el índice de la combinación
+      // Sumar la cantidad si ya existe el elemento, sino, agregarlo al arreglo
+
+      if (index >= 0) this.selectedCombinations[index].quantity += combination.quantity; // Vue.util.extend sirve para que los cambios que se hagan en el arreglo se actualicen en la vista
+      else this.selectedCombinations.push(Vue.util.extend({}, combination));
+    },
+    quitCombination: function quitCombination(index) {
+      // Quita un elemento de los seleccionados según el índice
+      this.selectedCombinations.splice(index, 1);
+    },
+    addIngredient: function addIngredient(ingredient) {
+      // Agrega ingredientes al detalle de la pizza
+      var index = this.selectedIngredients.findIndex(function (el) {
+        return el.id == ingredient.id;
+      }); // Buscar el índice del ingrediente
+      // Sumar la cantidad si ya existe el elemento, sino, agregarlo al arreglo
+
+      if (index >= 0) this.selectedIngredients[index].quantity += ingredient.quantity;else this.selectedIngredients.push(Vue.util.extend({}, ingredient));
+    },
+    quitIngredient: function quitIngredient(index) {
+      // Quita un elemento de los seleccionados según el índice
+      this.selectedIngredients.splice(index, 1);
+    },
+    showCombinationDetail: function showCombinationDetail() {
+      this.combinationDetailModal = true;
+    },
+    saveCombinationDetails: function saveCombinationDetails(combination, callback) {
+      var _this6 = this;
+
+      var i = 0;
+      this.selectedIngredients.forEach(function (el) {
+        var url = "pizzas/".concat(combination.id, "/ingredients/").concat(el.id, "/pizza-details");
+        axios.post(url, {
+          ingredient_price: el.price,
+          ingredient_quantity: el.quantity
+        }) // Solamente se envia la cantidad como parámetro, lo demás va en la url
+        .then(function () {
+          if (_this6.selectedIngredients.length == ++i) callback(); // Si ya se terminaron todas las consultas
+        })["catch"](function (error) {
+          throw error;
+        });
+      });
+    },
+    saveCombination: function saveCombination() {
+      var _this7 = this;
+
+      var me = this;
+      var url = "pizzas";
+
+      try {
+        if (this.selectedIngredients.length <= 0) throw this.translate('add_ingredients_message');
+        if (this.combinationName.length <= 0) throw this.translate('required_name_message');
+        axios.post(url, {
+          name: me.combinationName
+        }).then(function (response) {
+          if (response.status == 200) throw me.translate('combination_message_exists');
+          var combination = response.data.data;
+
+          _this7.saveCombinationDetails(combination, function () {
+            Vue.$toast.success(me.translate('created_combination'), {
+              position: 'top-right'
+            });
+            me.resetNewCombination();
+            me.searchCombinations();
+          });
+        })["catch"](function (error) {
+          Vue.$toast.error("Error: ".concat(error), {
+            position: 'top-right'
+          });
+        });
+      } catch (error) {
+        Vue.$toast.error("Error: ".concat(error), {
+          position: 'top-right'
+        });
+      }
+    },
+    resetNewCombination: function resetNewCombination() {
+      // Limpia los campos para registrar una nueva combinación y cierra los modales
+      this.combinationDetailModal = false;
+      this.newCombinationModal = false;
+      this.combinationName = '';
+      this.selectedIngredients = [];
+      this.getIngredients();
     }
   },
   mounted: function mounted() {
     this.createCancelToken();
+    this.getDefaults();
+    this.getIngredients();
     this.loadOrderNumber();
     this.searchCombinations();
   }
@@ -42069,251 +42300,104 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container-fluid" }, [
-    _c(
-      "div",
-      { staticClass: "px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" },
-      [_c("h3", [_vm._v(_vm._s(_vm.$t("messages.new_order")))])]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "card-deck mb-3 text-center" }, [
-      _c("div", { staticClass: "col-md-6" }, [
-        _c("div", { staticClass: "card mb-4 box-shadow" }, [
-          _c("div", { staticClass: "card-header bg-primary text-white" }, [
-            _vm._v(
-              "\n                    " +
-                _vm._s(_vm.$t("messages.select_pizzas")) +
-                "\n                "
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _c("form", { staticClass: "form-inline mb-3" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.searchTerm,
-                    expression: "searchTerm"
-                  }
-                ],
-                staticClass: "form-control col-md-5 ml-3 w-75",
-                attrs: {
-                  type: "text",
-                  placeholder: _vm.$t("messages.search"),
-                  "aria-label": "Search"
-                },
-                domProps: { value: _vm.searchTerm },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.searchTerm = $event.target.value
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-outline-success",
-                  attrs: { href: "#" }
-                },
-                [_vm._v(_vm._s(_vm.$t("messages.new")))]
+  return _c(
+    "div",
+    { staticClass: "container-fluid" },
+    [
+      _c(
+        "div",
+        { staticClass: "px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" },
+        [_c("h3", [_vm._v(_vm._s(_vm.$t("messages.new_order")))])]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-deck mb-3 text-center" }, [
+        _c("div", { staticClass: "col-md-6" }, [
+          _c("div", { staticClass: "card mb-4 box-shadow" }, [
+            _c("div", { staticClass: "card-header bg-primary text-white" }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(_vm.$t("messages.select_pizzas")) +
+                  "\n                "
               )
             ]),
             _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "pr-2",
-                staticStyle: { "max-height": "300px", "overflow-y": "auto" }
-              },
-              [
-                _c("table", { staticClass: "table table-striped table-sm" }, [
-                  _c("thead", [
-                    _c("tr", [
-                      _c("th", { staticStyle: { "font-size": "0.9em" } }, [
-                        _vm._v(_vm._s(_vm.$t("messages.name")))
-                      ]),
-                      _vm._v(" "),
-                      _c("th", { staticStyle: { "font-size": "0.9em" } }, [
-                        _vm._v(_vm._s(_vm.$t("messages.base_price")))
-                      ]),
-                      _vm._v(" "),
-                      _c("th", { staticStyle: { "font-size": "0.9em" } }, [
-                        _vm._v(_vm._s(_vm.$t("messages.ingredients_price")))
-                      ]),
-                      _vm._v(" "),
-                      _c("th", { staticStyle: { "font-size": "0.9em" } }, [
-                        _vm._v(_vm._s(_vm.$t("messages.total")))
-                      ]),
-                      _vm._v(" "),
-                      _c("th")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "tbody",
-                    _vm._l(_vm.combinations, function(combination) {
-                      return _c("tr", { key: combination.id }, [
-                        _c("td", {
-                          staticClass: "text-left",
-                          domProps: { textContent: _vm._s(combination.name) }
-                        }),
-                        _vm._v(" "),
-                        _c("td", {
-                          staticClass: "text-right",
-                          domProps: {
-                            textContent: _vm._s("$" + combination.base_price)
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("td", {
-                          staticClass: "text-right",
-                          domProps: {
-                            textContent: _vm._s(
-                              "$" + combination.ingredients_price
-                            )
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("td", {
-                          staticClass: "text-right",
-                          domProps: {
-                            textContent: _vm._s("$" + combination.total)
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("td", { staticStyle: { "max-width": "80px" } }, [
-                          _c(
-                            "form",
-                            {
-                              on: {
-                                submit: function($event) {
-                                  $event.preventDefault()
-                                  return _vm.addCombination(combination)
-                                }
-                              }
-                            },
-                            [
-                              _c(
-                                "div",
-                                { staticClass: "input-group input-group-sm" },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model.number",
-                                        value: combination.quantity,
-                                        expression: "combination.quantity",
-                                        modifiers: { number: true }
-                                      }
-                                    ],
-                                    staticClass: "form-control",
-                                    attrs: {
-                                      type: "number",
-                                      min: "1",
-                                      max: "50",
-                                      required: ""
-                                    },
-                                    domProps: { value: combination.quantity },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          combination,
-                                          "quantity",
-                                          _vm._n($event.target.value)
-                                        )
-                                      },
-                                      blur: function($event) {
-                                        return _vm.$forceUpdate()
-                                      }
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _vm._m(0, true)
-                                ]
-                              )
-                            ]
-                          )
-                        ])
-                      ])
-                    }),
-                    0
-                  )
-                ])
-              ]
-            )
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-md-6" }, [
-        _c("div", { staticClass: "card mb-4 box-shadow" }, [
-          _c("div", { staticClass: "card-header bg-primary text-white" }, [
-            _vm._v(
-              "\n                    " +
-                _vm._s(_vm.$t("messages.order_detail")) +
-                "\n                "
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _c("div", { staticClass: "mb-2" }, [
-              _c("strong", [
-                _vm._v(_vm._s(_vm.$t("messages.order_number")) + ":")
+            _c("div", { staticClass: "card-body" }, [
+              _c("form", { staticClass: "form-inline mb-3" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.searchTerm,
+                      expression: "searchTerm"
+                    }
+                  ],
+                  staticClass: "form-control col-md-5 ml-3 w-75",
+                  attrs: {
+                    type: "text",
+                    placeholder: _vm.$t("messages.search"),
+                    "aria-label": "Search"
+                  },
+                  domProps: { value: _vm.searchTerm },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.searchTerm = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-outline-success",
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        _vm.newCombinationModal = true
+                      }
+                    }
+                  },
+                  [_vm._v(_vm._s(_vm.$t("messages.new")))]
+                )
               ]),
-              _vm._v(" \n                        "),
-              _c("span", {
-                staticStyle: { "font-size": "0.9em" },
-                domProps: { textContent: _vm._s(_vm.orderNumber) }
-              })
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "pr-2",
-                staticStyle: { "max-height": "300px", "overflow-y": "auto" }
-              },
-              [
-                _c("table", { staticClass: "table table-striped table-sm" }, [
-                  _c("thead", [
-                    _c("tr", [
-                      _c("th", { staticStyle: { "font-size": "0.9em" } }, [
-                        _vm._v(_vm._s(_vm.$t("messages.name")))
-                      ]),
-                      _vm._v(" "),
-                      _c("th", { staticStyle: { "font-size": "0.9em" } }, [
-                        _vm._v(_vm._s(_vm.$t("messages.price")))
-                      ]),
-                      _vm._v(" "),
-                      _c("th", { staticStyle: { "font-size": "0.9em" } }, [
-                        _vm._v(_vm._s(_vm.$t("messages.quantity")))
-                      ]),
-                      _vm._v(" "),
-                      _c("th", { staticStyle: { "font-size": "0.9em" } }, [
-                        _vm._v("Subtotal")
-                      ]),
-                      _vm._v(" "),
-                      _c("th")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "tbody",
-                    [
-                      _vm._l(_vm.selectedCombinations, function(
-                        combination,
-                        i
-                      ) {
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "pr-2",
+                  staticStyle: { "max-height": "300px", "overflow-y": "auto" }
+                },
+                [
+                  _c("table", { staticClass: "table table-striped table-sm" }, [
+                    _c("thead", [
+                      _c("tr", [
+                        _c("th", { staticStyle: { "font-size": "0.9em" } }, [
+                          _vm._v(_vm._s(_vm.$t("messages.name")))
+                        ]),
+                        _vm._v(" "),
+                        _c("th", { staticStyle: { "font-size": "0.9em" } }, [
+                          _vm._v(_vm._s(_vm.$t("messages.base_price")))
+                        ]),
+                        _vm._v(" "),
+                        _c("th", { staticStyle: { "font-size": "0.9em" } }, [
+                          _vm._v(_vm._s(_vm.$t("messages.ingredients_price")))
+                        ]),
+                        _vm._v(" "),
+                        _c("th", { staticStyle: { "font-size": "0.9em" } }, [
+                          _vm._v(_vm._s(_vm.$t("messages.total")))
+                        ]),
+                        _vm._v(" "),
+                        _c("th")
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "tbody",
+                      _vm._l(_vm.combinations, function(combination) {
                         return _c("tr", { key: combination.id }, [
                           _c("td", {
                             staticClass: "text-left",
@@ -42323,14 +42407,7 @@ var render = function() {
                           _c("td", {
                             staticClass: "text-right",
                             domProps: {
-                              textContent: _vm._s("$" + combination.total)
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("td", {
-                            staticClass: "text-right",
-                            domProps: {
-                              textContent: _vm._s(combination.quantity)
+                              textContent: _vm._s("$" + combination.base_price)
                             }
                           }),
                           _vm._v(" "),
@@ -42338,79 +42415,639 @@ var render = function() {
                             staticClass: "text-right",
                             domProps: {
                               textContent: _vm._s(
-                                "$" +
-                                  Number(
-                                    combination.total * combination.quantity
-                                  ).toFixed(2)
+                                "$" + combination.ingredients_price
                               )
                             }
                           }),
                           _vm._v(" "),
-                          _c("td", [
+                          _c("td", {
+                            staticClass: "text-right",
+                            domProps: {
+                              textContent: _vm._s("$" + combination.total)
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("td", { staticStyle: { "max-width": "80px" } }, [
                             _c(
-                              "a",
+                              "form",
                               {
-                                staticClass: "btn btn-outline-danger btn-sm",
-                                attrs: { href: "#" },
                                 on: {
-                                  click: function($event) {
+                                  submit: function($event) {
                                     $event.preventDefault()
-                                    return _vm.removeItem(i)
+                                    return _vm.addCombination(combination)
                                   }
                                 }
                               },
-                              [_c("i", { staticClass: "fa fa-trash" })]
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "input-group input-group-sm" },
+                                  [
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model.number",
+                                          value: combination.quantity,
+                                          expression: "combination.quantity",
+                                          modifiers: { number: true }
+                                        }
+                                      ],
+                                      staticClass: "form-control",
+                                      attrs: {
+                                        type: "number",
+                                        min: "1",
+                                        max: "50",
+                                        required: ""
+                                      },
+                                      domProps: { value: combination.quantity },
+                                      on: {
+                                        input: function($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.$set(
+                                            combination,
+                                            "quantity",
+                                            _vm._n($event.target.value)
+                                          )
+                                        },
+                                        blur: function($event) {
+                                          return _vm.$forceUpdate()
+                                        }
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _vm._m(0, true)
+                                  ]
+                                )
+                              ]
                             )
                           ])
                         ])
                       }),
-                      _vm._v(" "),
-                      _c("tr", [
-                        _c(
-                          "td",
-                          {
-                            staticClass: "text-right",
-                            attrs: { colspan: "3" }
-                          },
-                          [_vm._v("Total")]
-                        ),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "text-right" }, [
-                          _c("strong", {
-                            domProps: {
-                              textContent: _vm._s("$" + _vm.orderTotal)
-                            }
-                          })
-                        ])
-                      ])
-                    ],
-                    2
-                  )
-                ])
-              ]
-            )
+                      0
+                    )
+                  ])
+                ]
+              )
+            ])
           ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-6" }, [
+          _c("div", { staticClass: "card mb-4 box-shadow" }, [
+            _c("div", { staticClass: "card-header bg-primary text-white" }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(_vm.$t("messages.order_detail")) +
+                  "\n                "
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-body" }, [
+              _c("div", { staticClass: "mb-2" }, [
+                _c("strong", [
+                  _vm._v(_vm._s(_vm.$t("messages.order_number")) + ":")
+                ]),
+                _vm._v(" \n                        "),
+                _c("span", {
+                  staticStyle: { "font-size": "0.9em" },
+                  domProps: { textContent: _vm._s(_vm.orderNumber) }
+                })
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "pr-2",
+                  staticStyle: { "max-height": "300px", "overflow-y": "auto" }
+                },
+                [
+                  _c("table", { staticClass: "table table-striped table-sm" }, [
+                    _c("thead", [
+                      _c("tr", [
+                        _c("th", { staticStyle: { "font-size": "0.9em" } }, [
+                          _vm._v(_vm._s(_vm.$t("messages.name")))
+                        ]),
+                        _vm._v(" "),
+                        _c("th", { staticStyle: { "font-size": "0.9em" } }, [
+                          _vm._v(_vm._s(_vm.$t("messages.price")))
+                        ]),
+                        _vm._v(" "),
+                        _c("th", { staticStyle: { "font-size": "0.9em" } }, [
+                          _vm._v(_vm._s(_vm.$t("messages.quantity")))
+                        ]),
+                        _vm._v(" "),
+                        _c("th", { staticStyle: { "font-size": "0.9em" } }, [
+                          _vm._v("Subtotal")
+                        ]),
+                        _vm._v(" "),
+                        _c("th")
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "tbody",
+                      [
+                        _vm._l(_vm.selectedCombinations, function(
+                          combination,
+                          i
+                        ) {
+                          return _c("tr", { key: combination.id }, [
+                            _c("td", {
+                              staticClass: "text-left",
+                              domProps: {
+                                textContent: _vm._s(combination.name)
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("td", {
+                              staticClass: "text-right",
+                              domProps: {
+                                textContent: _vm._s("$" + combination.total)
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("td", {
+                              staticClass: "text-right",
+                              domProps: {
+                                textContent: _vm._s(combination.quantity)
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("td", {
+                              staticClass: "text-right",
+                              domProps: {
+                                textContent: _vm._s(
+                                  "$" +
+                                    Number(
+                                      combination.total * combination.quantity
+                                    ).toFixed(2)
+                                )
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "btn btn-outline-danger btn-sm",
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.quitCombination(i)
+                                    }
+                                  }
+                                },
+                                [_c("i", { staticClass: "fa fa-trash" })]
+                              )
+                            ])
+                          ])
+                        }),
+                        _vm._v(" "),
+                        _c("tr", [
+                          _c(
+                            "td",
+                            {
+                              staticClass: "text-right",
+                              attrs: { colspan: "3" }
+                            },
+                            [_vm._v("Total")]
+                          ),
+                          _vm._v(" "),
+                          _c("td", { staticClass: "text-right" }, [
+                            _c("strong", {
+                              domProps: {
+                                textContent: _vm._s("$" + _vm.orderTotal)
+                              }
+                            })
+                          ])
+                        ])
+                      ],
+                      2
+                    )
+                  ])
+                ]
+              )
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-6 mx-auto" }, [
+          _c(
+            "a",
+            {
+              staticClass: "btn btn-success",
+              attrs: { href: "#" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.saveOrder($event)
+                }
+              }
+            },
+            [_vm._v(_vm._s(_vm.$t("messages.save_order")))]
+          )
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-md-6 mx-auto" }, [
-        _c(
-          "a",
-          {
-            staticClass: "btn btn-success",
-            attrs: { href: "#" },
-            on: {
-              click: function($event) {
-                $event.preventDefault()
-                return _vm.saveOrder($event)
-              }
-            }
+      _c(
+        "stack-modal",
+        {
+          attrs: {
+            show: _vm.newCombinationModal,
+            title: "" + _vm.translate("new_combination")
           },
-          [_vm._v(_vm._s(_vm.$t("messages.save_order")))]
-        )
-      ])
-    ])
-  ])
+          on: { close: _vm.closeNewCombinationModal }
+        },
+        [
+          _c("div", { staticClass: "container" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-md-12" }, [
+                _c("strong", { staticClass: "d-flex justify-content-center" }, [
+                  _vm._v(_vm._s(_vm.$t("messages.ingredients")) + ":")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "pr-2",
+                    staticStyle: { "max-height": "200px", "overflow-y": "auto" }
+                  },
+                  [
+                    _c(
+                      "table",
+                      { staticClass: "table table-striped table-sm" },
+                      [
+                        _c("thead", [
+                          _c("tr", [
+                            _c("th", [_vm._v(_vm._s(_vm.$t("messages.name")))]),
+                            _vm._v(" "),
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.$t("messages.price")))
+                            ]),
+                            _vm._v(" "),
+                            _c("th")
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "tbody",
+                          _vm._l(_vm.ingredients, function(ingredient) {
+                            return _c("tr", { key: ingredient.id }, [
+                              _c("td", {
+                                domProps: {
+                                  textContent: _vm._s(ingredient.name)
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("td", {
+                                domProps: {
+                                  textContent: _vm._s("$" + ingredient.price)
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "td",
+                                { staticStyle: { width: "90px !important" } },
+                                [
+                                  _c(
+                                    "form",
+                                    {
+                                      on: {
+                                        submit: function($event) {
+                                          $event.preventDefault()
+                                          return _vm.addIngredient(ingredient)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "div",
+                                        {
+                                          staticClass:
+                                            "input-group input-group-sm"
+                                        },
+                                        [
+                                          _c("input", {
+                                            directives: [
+                                              {
+                                                name: "model",
+                                                rawName: "v-model.number",
+                                                value: ingredient.quantity,
+                                                expression:
+                                                  "ingredient.quantity",
+                                                modifiers: { number: true }
+                                              }
+                                            ],
+                                            staticClass: "form-control",
+                                            attrs: {
+                                              type: "number",
+                                              min: "1",
+                                              max: "50",
+                                              required: ""
+                                            },
+                                            domProps: {
+                                              value: ingredient.quantity
+                                            },
+                                            on: {
+                                              input: function($event) {
+                                                if ($event.target.composing) {
+                                                  return
+                                                }
+                                                _vm.$set(
+                                                  ingredient,
+                                                  "quantity",
+                                                  _vm._n($event.target.value)
+                                                )
+                                              },
+                                              blur: function($event) {
+                                                return _vm.$forceUpdate()
+                                              }
+                                            }
+                                          }),
+                                          _vm._v(" "),
+                                          _c(
+                                            "div",
+                                            {
+                                              staticClass: "input-group-append"
+                                            },
+                                            [
+                                              _c(
+                                                "button",
+                                                {
+                                                  staticClass:
+                                                    "btn btn-success btn-sm"
+                                                },
+                                                [
+                                                  _c("i", {
+                                                    staticClass: "fa fa-plus"
+                                                  })
+                                                ]
+                                              )
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            ])
+                          }),
+                          0
+                        )
+                      ]
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "modal-footer",
+              attrs: { slot: "modal-footer" },
+              slot: "modal-footer"
+            },
+            [
+              _c(
+                "a",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.showCombinationDetail($event)
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    _vm._s(_vm.$t("messages.view_detail")) +
+                      " (" +
+                      _vm._s(_vm.selectedIngredients.length) +
+                      ")"
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "stack-modal",
+        {
+          attrs: {
+            show: _vm.combinationDetailModal,
+            title: "" + _vm.translate("combination_detail")
+          },
+          on: {
+            close: function($event) {
+              _vm.combinationDetailModal = false
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "container" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-md-4" }, [
+                _c("strong", [
+                  _vm._v(_vm._s(_vm.$t("messages.base_price")) + ":")
+                ]),
+                _vm._v(" "),
+                _c("span", {
+                  domProps: { textContent: _vm._s("$" + _vm.basePrice) }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-8" }, [
+                _c("strong", [
+                  _vm._v(_vm._s(_vm.$t("messages.ingredients_total")))
+                ]),
+                _vm._v(" "),
+                _c("span", {
+                  domProps: { textContent: _vm._s("$" + _vm.ingredientsTotal) }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-12" }, [
+                _c("strong", [
+                  _vm._v(_vm._s(_vm.$t("messages.combination_total")))
+                ]),
+                _vm._v(" "),
+                _c("span", {
+                  domProps: { textContent: _vm._s("$" + _vm.combinationTotal) }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-12 form-inline mb-3" }, [
+                _c("label", { attrs: { for: "combinationName" } }, [
+                  _c("strong", [
+                    _vm._v(_vm._s(_vm.$t("messages.combination_name")))
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.combinationName,
+                      expression: "combinationName"
+                    }
+                  ],
+                  staticClass: "form-control col-md-7 form-control-sm mx-sm-3",
+                  attrs: { type: "text", id: "combinationName" },
+                  domProps: { value: _vm.combinationName },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.combinationName = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "col-md-12 pr-2",
+                  staticStyle: { "max-height": "200px", "overflow-y": "auto" }
+                },
+                [
+                  _c("table", { staticClass: "table table-striped table-sm" }, [
+                    _c("thead", [
+                      _c("tr", [
+                        _c("th", [_vm._v(_vm._s(_vm.$t("messages.name")))]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v(_vm._s(_vm.$t("messages.price")))]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v(_vm._s(_vm.$t("messages.quantity")))]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Subtotal")]),
+                        _vm._v(" "),
+                        _c("th")
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "tbody",
+                      [
+                        _vm._l(_vm.selectedIngredients, function(
+                          ingredient,
+                          i
+                        ) {
+                          return _c("tr", { key: ingredient.id }, [
+                            _c("td", {
+                              domProps: { textContent: _vm._s(ingredient.name) }
+                            }),
+                            _vm._v(" "),
+                            _c("td", {
+                              domProps: {
+                                textContent: _vm._s("$" + ingredient.price)
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("td", {
+                              staticClass: "text-right",
+                              domProps: {
+                                textContent: _vm._s("" + ingredient.quantity)
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("td", {
+                              domProps: {
+                                textContent: _vm._s(
+                                  "$" +
+                                    Number(
+                                      ingredient.price * ingredient.quantity
+                                    ).toFixed(2)
+                                )
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "btn btn-outline-danger btn-sm",
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.quitIngredient(i)
+                                    }
+                                  }
+                                },
+                                [_c("i", { staticClass: "fa fa-trash" })]
+                              )
+                            ])
+                          ])
+                        }),
+                        _vm._v(" "),
+                        _c("tr", [
+                          _c(
+                            "td",
+                            {
+                              staticClass: "text-right",
+                              attrs: { colspan: "3" }
+                            },
+                            [_vm._v("Total:")]
+                          ),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: {
+                              textContent: _vm._s("$" + _vm.ingredientsTotal)
+                            }
+                          })
+                        ])
+                      ],
+                      2
+                    )
+                  ])
+                ]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "modal-footer",
+              attrs: { slot: "modal-footer" },
+              slot: "modal-footer"
+            },
+            [
+              _c(
+                "a",
+                {
+                  staticClass: "btn btn-success",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.saveCombination($event)
+                    }
+                  }
+                },
+                [_vm._v(_vm._s(_vm.$t("messages.save")))]
+              )
+            ]
+          )
+        ]
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
@@ -64159,10 +64796,13 @@ __webpack_require__.r(__webpack_exports__);
       "pizza_name": "Pizza name",
       "quantity": "Quantity",
       "close": "Close",
+      "combination_name": "Combination name",
       "combination_detail": "Combination detail",
+      "combination_total": "Combination total",
       "ingredient": "Ingredient",
       "ingredients": "Ingredients",
       "ingredients_price": "Ingredients price",
+      "ingredients_total": "Ingredients total",
       "new-order": "New order",
       "select_pizzas": "Select the pizzas",
       "selected_pizzas": "Selected pizzas",
@@ -64170,7 +64810,14 @@ __webpack_require__.r(__webpack_exports__);
       "new": "New",
       "save_order": "Save Order",
       "add_pizzas_message": "You must add pizzas at the order",
-      "created_order": "Success! Order registered correctly"
+      "created_order": "Success! Order created correctly",
+      "new_combination": "New combination",
+      "view_detail": "View detail",
+      "save": "Save",
+      "add_ingredients_message": "You must add ingredients",
+      "created_combination": "Success! Combination created correctly",
+      "required_name_message": "You must insert a combination name",
+      "combination_message_exists": "There is already a combination with this name"
     },
     "pagination": {
       "previous": "&laquo; Previous",
@@ -64333,10 +64980,13 @@ __webpack_require__.r(__webpack_exports__);
       "pizza_name": "Nombre pizza",
       "quantity": "Cantidad",
       "close": "Cerrar",
+      "combination_name": "Nombre de combinación",
       "combination_detail": "Detalle de combinación",
+      "combination_total": "Total de combinación",
       "ingredient": "Ingrediente",
       "ingredients": "Ingredientes",
       "ingredients_price": "Precio ingredientes",
+      "ingredients_total": "Total ingredientes",
       "new-order": "Nuevo pedido",
       "select_pizzas": "Seleccione las pizzas",
       "selected_pizzas": "Pizzas seleccionadas",
@@ -64344,7 +64994,14 @@ __webpack_require__.r(__webpack_exports__);
       "new": "Nuevo",
       "save_order": "Guardar pedido",
       "add_pizzas_message": "Debe agregar pizzas al pedido",
-      "created_order": "¡Hecho! Pedido ingresado correctamente"
+      "created_order": "¡Hecho! Pedido ingresado correctamente",
+      "new_combination": "Nueva combinación",
+      "view_detail": "Ver detalle",
+      "save": "Guardar",
+      "add_ingredients_message": "Debe agregar ingredientes",
+      "created_combination": "¡Hecho! Combinación creada correctamente",
+      "required_name_message": "Debe ingresar e nombre de la combinación",
+      "combination_message_exists": "Ya existe una combinacion con este nombre"
     },
     "passwords": {
       "reset": "¡Su contraseña ha sido restablecida!",

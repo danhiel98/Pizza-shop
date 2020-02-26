@@ -17,6 +17,7 @@ Auth::routes();
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/new-order', 'HomeController@new')->name('home');
 Route::get('/last-order', 'HomeController@orderNumber');
+Route::get('/configs', 'HomeController@config');
 
 Route::resource('clients.orders', 'Client\ClientOrderController', ['except' => ['create', 'edit']]);
 Route::resource('ingredients', 'Ingredient\IngredientController', ['except' => ['create', 'edit']]);
@@ -27,3 +28,4 @@ Route::resource('orders', 'Order\OrderController', ['except' => ['create', 'edit
 Route::resource('orders.order-details', 'Order\OrderDetailController', ['except' => ['create', 'edit']]);
 Route::resource('orders.pizzas', 'Order\OrderPizzaController', ['only' => ['index']]);
 Route::resource('orders.pizzas.order-details', 'Order\OrderPizzaDetailController', ['only' => ['store']]);
+Route::resource('pizzas.ingredients.pizza-details', 'Pizza\PizzaIngredientDetailController', ['only' => ['store']]);

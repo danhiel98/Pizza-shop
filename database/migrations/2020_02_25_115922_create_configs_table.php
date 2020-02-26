@@ -1,12 +1,12 @@
 <?php
 
-// Tabla de pizzas
+// Tabla de datos globales
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePizzasTable extends Migration
+class CreateConfigsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,12 +15,11 @@ class CreatePizzasTable extends Migration
      */
     public function up()
     {
-        Schema::create('pizzas', function (Blueprint $table) {
+        Schema::create('configs', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 50)->unique(); // El nombre que le pongan a la pizza
-            $table->decimal('base_price', 4,2)->comment('Precio de la base de la pizza (sin ingredientes)');
+            $table->string('business_name');
+            $table->decimal('pizza_base_price', 4,2)->comment('Precio base de las pizzas');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -31,6 +30,6 @@ class CreatePizzasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pizzas');
+        Schema::dropIfExists('configs');
     }
 }

@@ -10,6 +10,7 @@ use App\Ingredient;
 use App\OrderDetail;
 use App\PizzaDetail;
 use App\BranchOffice;
+use App\Config;
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 
@@ -35,6 +36,13 @@ $factory->define(User::class, function (Faker $faker) {
     ];
 });
 
+$factory->define(Config::class, function (Faker $faker){
+    return [
+        'business_name'    => $faker->word,
+        'pizza_base_price' => $faker->randomFloat(2, 1, 5)
+    ];
+});
+
 $factory->define(BranchOffice::class, function (Faker $faker) {
     return [
         'name'    => $faker->word,
@@ -52,7 +60,7 @@ $factory->define(Ingredient::class, function (Faker $faker) {
 $factory->define(Pizza::class, function (Faker $faker) {
     return [
         'name'       => $faker->word,
-        'base_price' => 1.5
+        'base_price' => $faker->randomFloat(2, 1, 5)
     ];
 });
 

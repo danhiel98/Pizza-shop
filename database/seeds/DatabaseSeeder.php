@@ -22,15 +22,8 @@ class DatabaseSeeder extends Seeder
         // No tener en cuenta llaves foraneas para poder eliminar las tablas sin problema
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        // User::truncate();
-        // BranchOffice::truncate();
-        // Ingredient::truncate();
-        // Pizza::truncate();
-        // PizzaDetail::truncate();
-        // Order::truncate();
-        // OrderDetail::truncate();
-
         // $this->call(FactorySeeder::class);
+        $this->call(ConfigSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(BranchOfficeSeeder::class);
         $this->call(IngredientSeeder::class);

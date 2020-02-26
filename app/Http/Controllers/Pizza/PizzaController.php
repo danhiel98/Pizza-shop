@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pizza;
 
+use App\Config;
 use App\Http\Controllers\Controller;
 use App\Pizza;
 use Illuminate\Http\Request;
@@ -28,7 +29,20 @@ class PizzaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'name' => 'min:5|max:50'
+        ];
+
+        $this->validate($request, $rules);
+
+        $fields['name']       = $request->name;
+        $fields['base_price'] = Config::all()->first()->pizza_base_price;
+
+        $pizza = Pizza::firstOrCreate($fields);
+
+        $code = $pizza->wasRecentlyCreated ? 201 : 200;
+
+        return $this->showOne($pizza, $code);
     }
 
     /**

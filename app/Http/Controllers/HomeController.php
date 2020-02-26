@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Order;
+use App\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +17,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except('orderNumber');
+        $this->middleware('auth')->except(['orderNumber', 'config']);
     }
 
     /**
@@ -46,5 +47,12 @@ class HomeController extends Controller
         $order = Order::orderBy('id')->get()->last();
 
         return $this->showOne($order);
+    }
+
+    public function config()
+    {
+        $configs = Config::all()->first();
+
+        return $this->showOne($configs);
     }
 }

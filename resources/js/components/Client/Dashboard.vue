@@ -377,7 +377,7 @@
                     Vue.$toast.error(`Error: ${error}`, { position: 'top-right' });
                 });
             },
-            closeOrderDetailModal(){
+            closeOrderDetailModal(){ // Cierra los modales para ver detalles de los pedidos y restablece variables
                 this.orderDetailModal = false;
                 this.activeOrder = null;
                 this.activeOrderDetails = [];
@@ -395,7 +395,7 @@
                     });
                 });
             },
-            showCombinationDetails(combination){
+            showCombinationDetails(combination){  // Muestra los detalles de las combinaciones
                 this.activeCombination = combination;
                 this.combinationDetailModal = true;
                 this.activeCombinationDetails = [];
@@ -408,7 +408,7 @@
                     Vue.$toast.error(`Error: ${error}`, { position: 'top-right' });
                 });
             },
-            closeCombinationDetailModal(){
+            closeCombinationDetailModal(){ // Cierra los modales para registro de combinaciones y limpia las variables
                 this.combinationDetailModal = false;
                 this.activeCombination = null;
                 this.activeCombinationDetails = [];
