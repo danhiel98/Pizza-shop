@@ -41,7 +41,7 @@ class ClientController extends Controller
         $clients = Client::usual()->get();
 
         if ($clients->count() > 10) // Si son más de 10 clientes
-            $clients = $clients->slice(0, 9); // Que obtenga solamente los primeros 10
+            $clients = $clients->slice(0, 10); // Que obtenga solamente los primeros 10
 
         return $this->showAll($clients);
     }
@@ -57,7 +57,7 @@ class ClientController extends Controller
         $clients = Client::payment();
 
         if ($clients->count() > 10) // Si son más de 10 clientes
-            $clients = $clients->slice(0, 9); // Que obtenga solamente los primeros 10
+            $clients = $clients->slice(0, 10); // Que obtenga solamente los primeros 10
 
         return $this->showAll($clients);
     }

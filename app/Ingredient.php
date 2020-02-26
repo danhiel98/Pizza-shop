@@ -28,4 +28,9 @@ class Ingredient extends Model
     {
         return $this->belongsToMany(Pizza::class, 'pizza_details', 'ingredient_id', 'pizza_id');
     }
+
+    public function scopePopular($query)
+    {
+        return $query->whereHas('pizzas')->withCount('pizzas')->orderBy('pizzas_count', 'desc');
+    }
 }

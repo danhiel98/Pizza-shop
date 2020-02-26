@@ -20,6 +20,7 @@ Route::get('/last-order', 'HomeController@orderNumber');
 Route::get('/configs', 'HomeController@config');
 Route::get('clients/usual', 'Client\ClientController@usual'); // Clientes frecuentes
 Route::get('clients/payment', 'Client\ClientController@payment'); // Clientes que más gastan
+Route::get('ingredients/popular', 'Ingredient\IngredientController@popular'); // Ingredientes más populares
 
 Route::resource('clients.orders', 'Client\ClientOrderController', ['except' => ['create', 'edit']]);
 Route::resource('ingredients', 'Ingredient\IngredientController', ['except' => ['create', 'edit']]);
