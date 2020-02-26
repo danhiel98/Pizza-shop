@@ -55,5 +55,10 @@ return [
     'required_name_message'      => 'You must insert a combination name',
     'combination_message_exists' => 'There is already a combination with this name',
     'welcome_message'            => 'Welcome!',
-    'usual_customers'            => 'Usual customers'
+    'usual_customers'            => 'Usual customers',
+    'orders_quantity'            => 'Orders quantity',
+    'money_spended_client'       => 'Customers (more money spended)',
+    'spended_money'              => 'Spended money',
+    'most_popular_ingredients'   => 'Most popular ingredients',
+    'times_used'                 => 'Times used (combinations)'
 ];

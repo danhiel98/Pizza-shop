@@ -2133,20 +2133,98 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    return {};
+    return {
+      usualClients: [],
+      // Clientes frecuentes
+      loadingUsualClients: false,
+      spendedMoneyClients: [],
+      // Clientes que han gastado más dinero
+      loadingSpendedMoneyClients: false,
+      popularIngredients: [],
+      // Ingredientes populares (se eligen 5)
+      loadingPopularIngredients: false,
+      branchOffices: [],
+      // Sucursales
+      loadingBranchOffices: false
+    };
   },
-  methods: {},
-  mounted: function mounted() {}
+  methods: {
+    translate: function translate(key) {
+      // Equivalente a $t en el template
+      return Vue.i18n.translate("messages.".concat(key));
+    },
+    getUsualClients: function getUsualClients() {
+      var _this = this;
+
+      // Obtener clientes frecuentes
+      var url = "clients/usual";
+      this.loadingUsualClients = true;
+      axios.get(url).then(function (response) {
+        _this.usualClients = response.data.data;
+      })["catch"](function (error) {
+        Vue.$toast.error("Error: ".concat(error), {
+          position: 'top-right'
+        });
+      })["finally"](function () {
+        _this.loadingUsualClients = false;
+      });
+    },
+    getSpendedMoneyClients: function getSpendedMoneyClients() {
+      var _this2 = this;
+
+      // Obtener clientes según dinero gastado
+      var url = "clients/spended";
+      this.loadingSpendedMoneyClients = true;
+      axios.get(url).then(function (response) {
+        _this2.spendedMoneyClients = response.data.data;
+      })["catch"](function (error) {
+        Vue.$toast.error("Error: ".concat(error), {
+          position: 'top-right'
+        });
+      })["finally"](function () {
+        _this2.loadingSpendedMoneyClients = false;
+      });
+    },
+    getPopularIngredients: function getPopularIngredients() {
+      var _this3 = this;
+
+      // Obtener ingredientes más populares
+      var url = "ingredients/popular";
+      this.loadingPopularIngredients = true;
+      axios.get(url).then(function (response) {
+        _this3.popularIngredients = response.data.data;
+      })["catch"](function (error) {
+        Vue.$toast.error("Error: ".concat(error), {
+          position: 'top-right'
+        });
+      })["finally"](function () {
+        _this3.loadingPopularIngredients = false;
+      });
+    },
+    getBranchOffices: function getBranchOffices() {
+      // Obtener sucursales
+      var me = this;
+      var url = "branch-offices";
+      me.loadingBranchOffices = true;
+      axios.get(url).then(function (response) {
+        me.branchOffices = response.data.data;
+      })["catch"](function (error) {
+        Vue.$toast.error("Error: ".concat(error), {
+          position: 'top-right'
+        });
+      })["finally"](function () {
+        me.loadingBranchOffices = false;
+      });
+    }
+  },
+  mounted: function mounted() {
+    this.getUsualClients();
+    this.getSpendedMoneyClients();
+    this.getPopularIngredients();
+    this.getBranchOffices();
+  }
 });
 
 /***/ }),
@@ -41728,9 +41806,14 @@ var render = function() {
             _c("h5", { staticClass: "my-0 font-weight-normal" }, [
               _vm._v(
                 "\n                        " +
-                  _vm._s(_vm.$t("messages.frequent_clients")) +
+                  _vm._s(_vm.$t("messages.usual_customers")) +
                   "\n                        "
-              )
+              ),
+              _vm.loadingUsualClients
+                ? _c("small", [
+                    _c("i", { staticClass: "fa fa-spinner fa-spin" })
+                  ])
+                : _vm._e()
             ])
           ]),
           _vm._v(" "),
@@ -41738,27 +41821,45 @@ var render = function() {
             _c("table", { staticClass: "table table-striped table-sm" }, [
               _c("thead", [
                 _c("tr", [
+                  _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
+                  _vm._v(" "),
                   _c("th", { attrs: { scope: "col" } }, [
-                    _vm._v(_vm._s(_vm.$t("messages.order_number")))
+                    _vm._v(_vm._s(_vm.$t("messages.name")))
                   ]),
                   _vm._v(" "),
                   _c("th", { attrs: { scope: "col" } }, [
-                    _vm._v(_vm._s(_vm.$t("messages.date")))
+                    _vm._v(_vm._s(_vm.$t("messages.email")))
                   ]),
                   _vm._v(" "),
                   _c("th", { attrs: { scope: "col" } }, [
-                    _vm._v(_vm._s(_vm.$t("messages.pizza_quantity")))
-                  ]),
-                  _vm._v(" "),
-                  _c("th", { attrs: { scope: "col" } }, [
-                    _vm._v(_vm._s(_vm.$t("messages.total")))
+                    _vm._v(_vm._s(_vm.$t("messages.orders_quantity")))
                   ]),
                   _vm._v(" "),
                   _c("td")
                 ])
               ]),
               _vm._v(" "),
-              _c("tbody")
+              _c(
+                "tbody",
+                _vm._l(_vm.usualClients, function(client, i) {
+                  return _c("tr", { key: client.id }, [
+                    _c("th", { domProps: { textContent: _vm._s(++i) } }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(client.name) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(client.email) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(client.order_quantity) }
+                    })
+                  ])
+                }),
+                0
+              )
             ])
           ])
         ])
@@ -41770,9 +41871,14 @@ var render = function() {
             _c("h5", { staticClass: "my-0 font-weight-normal" }, [
               _vm._v(
                 "\n                        " +
-                  _vm._s(_vm.$t("messages.preset_combinations")) +
+                  _vm._s(_vm.$t("messages.money_spended_client")) +
                   "\n                        "
-              )
+              ),
+              _vm.loadingSpendedMoneyClients
+                ? _c("small", [
+                    _c("i", { staticClass: "fa fa-spinner fa-spin" })
+                  ])
+                : _vm._e()
             ])
           ]),
           _vm._v(" "),
@@ -41787,20 +41893,38 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("th", { attrs: { scope: "col" } }, [
-                    _vm._v(_vm._s(_vm.$t("messages.base_price")))
+                    _vm._v(_vm._s(_vm.$t("messages.email")))
                   ]),
                   _vm._v(" "),
                   _c("th", { attrs: { scope: "col" } }, [
-                    _vm._v(_vm._s(_vm.$t("messages.ingredients_price")))
-                  ]),
-                  _vm._v(" "),
-                  _c("th", { attrs: { scope: "col" } }, [
-                    _vm._v(_vm._s(_vm.$t("messages.total")))
+                    _vm._v(_vm._s(_vm.$t("messages.spended_money")))
                   ])
                 ])
               ]),
               _vm._v(" "),
-              _c("tbody")
+              _c(
+                "tbody",
+                _vm._l(_vm.spendedMoneyClients, function(client, i) {
+                  return _c("tr", { key: client.id }, [
+                    _c("th", { domProps: { textContent: _vm._s(++i) } }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(client.name) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(client.email) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: {
+                        textContent: _vm._s("$" + client.total_spended)
+                      }
+                    })
+                  ])
+                }),
+                0
+              )
             ])
           ])
         ])
@@ -41812,9 +41936,14 @@ var render = function() {
             _c("h5", { staticClass: "my-0 font-weight-normal" }, [
               _vm._v(
                 "\n                        " +
-                  _vm._s(_vm.$t("messages.aviable_ingredients")) +
+                  _vm._s(_vm.$t("messages.most_popular_ingredients")) +
                   "\n                        "
-              )
+              ),
+              _vm.loadingPopularIngredients
+                ? _c("small", [
+                    _c("i", { staticClass: "fa fa-spinner fa-spin" })
+                  ])
+                : _vm._e()
             ])
           ]),
           _vm._v(" "),
@@ -41829,12 +41958,28 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("th", { attrs: { scope: "col" } }, [
-                    _vm._v(_vm._s(_vm.$t("messages.price")))
+                    _vm._v(_vm._s(_vm.$t("messages.times_used")))
                   ])
                 ])
               ]),
               _vm._v(" "),
-              _c("tbody")
+              _c(
+                "tbody",
+                _vm._l(_vm.popularIngredients, function(ingredient, i) {
+                  return _c("tr", { key: ingredient.id }, [
+                    _c("th", { domProps: { textContent: _vm._s(++i) } }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(ingredient.name) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(ingredient.pizza_count) }
+                    })
+                  ])
+                }),
+                0
+              )
             ])
           ])
         ])
@@ -41848,7 +41993,12 @@ var render = function() {
                 "\n                        " +
                   _vm._s(_vm.$t("messages.offices")) +
                   "\n                        "
-              )
+              ),
+              _vm.loadingBranchOffices
+                ? _c("small", [
+                    _c("i", { staticClass: "fa fa-spinner fa-spin" })
+                  ])
+                : _vm._e()
             ])
           ]),
           _vm._v(" "),
@@ -41868,7 +42018,23 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _c("tbody")
+              _c(
+                "tbody",
+                _vm._l(_vm.branchOffices, function(office, i) {
+                  return _c("tr", { key: office.id }, [
+                    _c("th", { domProps: { textContent: _vm._s(++i) } }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(office.name) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(office.address) }
+                    })
+                  ])
+                }),
+                0
+              )
             ])
           ])
         ])
@@ -64935,14 +65101,15 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*!*****************************************************!*\
   !*** ./resources/js/components/Admin/Dashboard.vue ***!
   \*****************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Dashboard_vue_vue_type_template_id_5d194e19___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Dashboard.vue?vue&type=template&id=5d194e19& */ "./resources/js/components/Admin/Dashboard.vue?vue&type=template&id=5d194e19&");
 /* harmony import */ var _Dashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Dashboard.vue?vue&type=script&lang=js& */ "./resources/js/components/Admin/Dashboard.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Dashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Dashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -64972,7 +65139,7 @@ component.options.__file = "resources/js/components/Admin/Dashboard.vue"
 /*!******************************************************************************!*\
   !*** ./resources/js/components/Admin/Dashboard.vue?vue&type=script&lang=js& ***!
   \******************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -65226,7 +65393,12 @@ __webpack_require__.r(__webpack_exports__);
       "required_name_message": "You must insert a combination name",
       "combination_message_exists": "There is already a combination with this name",
       "welcome_message": "Welcome!",
-      "usual_customers": "Usual customers"
+      "usual_customers": "Usual customers",
+      "orders_quantity": "Orders quantity",
+      "money_spended_client": "Customers (more money spended)",
+      "spended_money": "Spended money",
+      "most_popular_ingredients": "Most popular ingredients",
+      "times_used": "Times used (combinations)"
     },
     "pagination": {
       "previous": "&laquo; Previous",
@@ -65412,7 +65584,12 @@ __webpack_require__.r(__webpack_exports__);
       "required_name_message": "Debe ingresar e nombre de la combinación",
       "combination_message_exists": "Ya existe una combinacion con este nombre",
       "welcome_message": "¡Bienvenido!",
-      "usual_customers": "Clientes frecuentes"
+      "usual_customers": "Clientes frecuentes",
+      "orders_quantity": "Cant. pedidos",
+      "money_spended_client": "Clientes (más dinero gastado)",
+      "spended_money": "Dinero gastado",
+      "most_popular_ingredients": "Ingredientes más populares",
+      "times_used": "Veces utilizado"
     },
     "passwords": {
       "reset": "¡Su contraseña ha sido restablecida!",

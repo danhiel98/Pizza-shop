@@ -52,9 +52,9 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function payment()
+    public function spended()
     {
-        $clients = Client::payment();
+        $clients = Client::spended();
 
         if ($clients->count() > 10) // Si son más de 10 clientes
             $clients = $clients->slice(0, 10); // Que obtenga solamente los primeros 10

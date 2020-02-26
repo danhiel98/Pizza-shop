@@ -55,5 +55,10 @@ return [
     'required_name_message'      => 'Debe ingresar e nombre de la combinación',
     'combination_message_exists' => 'Ya existe una combinacion con este nombre',
     'welcome_message'            => '¡Bienvenido!',
-    'usual_customers'            => 'Clientes frecuentes'
+    'usual_customers'            => 'Clientes frecuentes',
+    'orders_quantity'            => 'Cant. pedidos',
+    'money_spended_client'       => 'Clientes (más dinero gastado)',
+    'spended_money'              => 'Dinero gastado',
+    'most_popular_ingredients'   => 'Ingredientes más populares',
+    'times_used'                 => 'Veces utilizado'
 ];

@@ -77,7 +77,6 @@ class IngredientController extends Controller
         if ($ingredients->count() > 5) // Si son más de 10 clientes
             $ingredients = $ingredients->slice(0, 5); // Que obtenga solamente los primeros 10
 
-        return response()->json($ingredients, 200);
         return $this->showAll($ingredients);
     }
 }

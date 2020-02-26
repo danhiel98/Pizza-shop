@@ -29,6 +29,22 @@ class Ingredient extends Model
         return $this->belongsToMany(Pizza::class, 'pizza_details', 'ingredient_id', 'pizza_id');
     }
 
+    /**
+     * Devuelve la cantidad de pizzas donde se ha utilizado este ingrediente
+     *
+     * @return int
+     */
+    public function getPizzaCountAttribute()
+    {
+        return $this->pizzas->count();
+    }
+
+    /**
+     * Devuelve la lista de ingredientes más utilizados
+     *
+     * @param QueryBuilder $query
+     * @return QueryBuilder
+     */
     public function scopePopular($query)
     {
         return $query->whereHas('pizzas')->withCount('pizzas')->orderBy('pizzas_count', 'desc');

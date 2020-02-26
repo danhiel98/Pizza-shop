@@ -15,10 +15,11 @@ class IngredientTransformer extends TransformerAbstract
     public function transform(Ingredient $ingredient)
     {
         return [
-            'id'         => (int)$ingredient->id,
-            'name'       => (string)$ingredient->name,
-            'price'      => (double)$ingredient->price,
-            'created_at' => (string)$ingredient->created_at
+            'id'          => (int)$ingredient->id,
+            'name'        => (string)$ingredient->name,
+            'price'       => (double)$ingredient->price,
+            'pizza_count' => (int)$ingredient->pizza_count,
+            'created_at'  => (string)$ingredient->created_at
         ];
     }
 }

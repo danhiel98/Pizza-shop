@@ -59,7 +59,12 @@ export default {
             "required_name_message": "You must insert a combination name",
             "combination_message_exists": "There is already a combination with this name",
             "welcome_message": "Welcome!",
-            "usual_customers": "Usual customers"
+            "usual_customers": "Usual customers",
+            "orders_quantity": "Orders quantity",
+            "money_spended_client": "Customers (more money spended)",
+            "spended_money": "Spended money",
+            "most_popular_ingredients": "Most popular ingredients",
+            "times_used": "Times used (combinations)"
         },
         "pagination": {
             "previous": "&laquo; Previous",
@@ -245,7 +250,12 @@ export default {
             "required_name_message": "Debe ingresar e nombre de la combinación",
             "combination_message_exists": "Ya existe una combinacion con este nombre",
             "welcome_message": "¡Bienvenido!",
-            "usual_customers": "Clientes frecuentes"
+            "usual_customers": "Clientes frecuentes",
+            "orders_quantity": "Cant. pedidos",
+            "money_spended_client": "Clientes (más dinero gastado)",
+            "spended_money": "Dinero gastado",
+            "most_popular_ingredients": "Ingredientes más populares",
+            "times_used": "Veces utilizado"
         },
         "passwords": {
             "reset": "¡Su contraseña ha sido restablecida!",

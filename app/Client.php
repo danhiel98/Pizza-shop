@@ -34,6 +34,20 @@ class Client extends User
     }
 
     /**
+     * Devuelve el total gastado por el cliente
+     *
+     * @return double
+     */
+    public function getTotalSpendedAttribute()
+    {
+        $orders = $this->orders;
+        $total = 0;
+        foreach ($orders as $order) $total += $order->total;
+
+        return $total;
+    }
+
+    /**
      * Clientes que han realizado más pedidos
      *
      * @param QueryBuilder $query
@@ -49,7 +63,7 @@ class Client extends User
      * @param QueryBuiler $query
      * @return Collection
      */
-    public function scopePayment($query)
+    public function scopeSpended($query)
     {
         $clients = $query->whereHas('orders')->get();
 
@@ -59,10 +73,10 @@ class Client extends User
             $total = 0;
             foreach ($orders as $order) $total += $order->total;
 
-            $client->total_payment = $total;
+            $client->total_spended = $total;
         }
 
-        $sorted = $clients->sortByDesc('total_payment');
-        return $sorted->values()->all();
+        $sorted = $clients->sortByDesc('total_spended');
+        return collect($sorted->values()->all());
     }
 }

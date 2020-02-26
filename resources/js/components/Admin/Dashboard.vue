@@ -8,66 +8,28 @@
                 <div class="card mb-4 box-shadow">
                     <div class="card-header bg-primary text-white">
                         <h5 class="my-0 font-weight-normal">
-                            {{ $t('messages.frequent_clients') }}
-                            <!-- <small v-if="loadingOrderHistory"><i class="fa fa-spinner fa-spin"></i></small> -->
+                            {{ $t('messages.usual_customers') }}
+                            <small v-if="loadingUsualClients"><i class="fa fa-spinner fa-spin"></i></small>
                         </h5>
                     </div>
                     <div class="card-body-2">
                         <table class="table table-striped table-sm">
                             <thead>
                                 <tr>
-                                    <th scope="col">{{ $t('messages.order_number') }}</th>
-                                    <th scope="col">{{ $t('messages.date') }}</th>
-                                    <th scope="col">{{ $t('messages.pizza_quantity') }}</th>
-                                    <th scope="col">{{ $t('messages.total') }}</th>
+                                    <th scope="col">#</th>
+                                    <th scope="col">{{ $t('messages.name') }}</th>
+                                    <th scope="col">{{ $t('messages.email') }}</th>
+                                    <th scope="col">{{ $t('messages.orders_quantity') }}</th>
                                     <td></td>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- <tr v-for="order in orderHistory" :key="order.id">
-                                    <th v-text="order.order_number"></th>
-                                    <td v-text="order.date"></td>
-                                    <td v-text="order.pizza_quantity"></td>
-                                    <td v-text="`$${order.total}`"></td>
-                                    <td>
-                                        <a href="#" class="btn btn-default btn-sm" @click.prevent="showOrderDetails(order)"><i class="fa fa-eye"></i></a>
-                                    </td>
-                                </tr> -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="card mb-4 box-shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="my-0 font-weight-normal">
-                            {{ $t('messages.preset_combinations') }}
-                            <!-- <small v-if="loadingPresetCombinations"><i class="fa fa-spinner fa-spin"></i></small> -->
-                        </h5>
-                    </div>
-                    <div class="card-body-2">
-                        <table class="table table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">{{ $t('messages.name') }}</th>
-                                    <th scope="col">{{ $t('messages.base_price') }}</th>
-                                    <th scope="col">{{ $t('messages.ingredients_price') }}</th>
-                                    <th scope="col">{{ $t('messages.total') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- <tr v-for="(combination, i) in presetCombinations" :key="combination.id">
+                                <tr v-for="(client, i) in usualClients" :key="client.id">
                                     <th v-text="++i"></th>
-                                    <td v-text="combination.name"></td>
-                                    <td v-text="`$${combination.base_price}`"></td>
-                                    <td v-text="`$${combination.ingredients_price}`"></td>
-                                    <td v-text="`$${combination.total}`"></td>
-                                    <td>
-                                        <a href="#" class="btn btn-default btn-sm" @click.prevent="showCombinationDetails(combination)"><i class="fa fa-eye"></i></a>
-                                    </td>
-                                </tr> -->
+                                    <td v-text="client.name"></td>
+                                    <td v-text="client.email"></td>
+                                    <td v-text="client.order_quantity"></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -77,8 +39,8 @@
                 <div class="card mb-4 box-shadow">
                     <div class="card-header bg-primary text-white">
                         <h5 class="my-0 font-weight-normal">
-                            {{ $t('messages.aviable_ingredients') }}
-                            <!-- <small v-if="loadingAviableIngredients"><i class="fa fa-spinner fa-spin"></i></small> -->
+                            {{ $t('messages.money_spended_client') }}
+                            <small v-if="loadingSpendedMoneyClients"><i class="fa fa-spinner fa-spin"></i></small>
                         </h5>
                     </div>
                     <div class="card-body-2">
@@ -87,15 +49,45 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">{{ $t('messages.name') }}</th>
-                                    <th scope="col">{{ $t('messages.price') }}</th>
+                                    <th scope="col">{{ $t('messages.email') }}</th>
+                                    <th scope="col">{{ $t('messages.spended_money') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- <tr v-for="(ingredient, i) in aviableIngredients" :key="ingredient.id">
+                                <tr v-for="(client, i) in spendedMoneyClients" :key="client.id">
+                                    <th v-text="++i"></th>
+                                    <td v-text="client.name"></td>
+                                    <td v-text="client.email"></td>
+                                    <td v-text="`$${client.total_spended}`"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="my-0 font-weight-normal">
+                            {{ $t('messages.most_popular_ingredients') }}
+                            <small v-if="loadingPopularIngredients"><i class="fa fa-spinner fa-spin"></i></small>
+                        </h5>
+                    </div>
+                    <div class="card-body-2">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">{{ $t('messages.name') }}</th>
+                                    <th scope="col">{{ $t('messages.times_used') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(ingredient, i) in popularIngredients" :key="ingredient.id">
                                     <th v-text="++i"></th>
                                     <td v-text="ingredient.name"></td>
-                                    <td v-text="`$${ingredient.price}`"></td>
-                                </tr> -->
+                                    <td v-text="ingredient.pizza_count"></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -106,7 +98,7 @@
                     <div class="card-header bg-primary text-white">
                         <h5 class="my-0 font-weight-normal">
                             {{ $t('messages.offices') }}
-                            <!-- <small v-if="loadingBranchOffices"><i class="fa fa-spinner fa-spin"></i></small> -->
+                            <small v-if="loadingBranchOffices"><i class="fa fa-spinner fa-spin"></i></small>
                         </h5>
                     </div>
                     <div class="card-body-2">
@@ -119,11 +111,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- <tr v-for="(office, i) in branchOffices" :key="office.id">
+                                <tr v-for="(office, i) in branchOffices" :key="office.id">
                                     <th v-text="++i"></th>
                                     <td v-text="office.name"></td>
                                     <td v-text="office.address"></td>
-                                </tr> -->
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -136,14 +128,90 @@
     export default {
         data() {
             return {
+                usualClients: [], // Clientes frecuentes
+                loadingUsualClients: false,
 
+                spendedMoneyClients: [], // Clientes que han gastado más dinero
+                loadingSpendedMoneyClients: false,
+
+                popularIngredients: [], // Ingredientes populares (se eligen 5)
+                loadingPopularIngredients: false,
+
+                branchOffices: [], // Sucursales
+                loadingBranchOffices: false
             }
         },
         methods: {
+            translate(key){ // Equivalente a $t en el template
+                return Vue.i18n.translate(`messages.${key}`);
+            },
+            getUsualClients(){ // Obtener clientes frecuentes
+                let url = `clients/usual`;
 
+                this.loadingUsualClients = true;
+                axios.get(url)
+                .then(response => {
+                    this.usualClients = response.data.data;
+                })
+                .catch(error => {
+                    Vue.$toast.error(`Error: ${error}`, { position: 'top-right' });
+                })
+                .finally(() => {
+                    this.loadingUsualClients = false;
+                });
+            },
+            getSpendedMoneyClients(){ // Obtener clientes según dinero gastado
+                let url = `clients/spended`;
+
+                this.loadingSpendedMoneyClients = true;
+                axios.get(url)
+                .then(response => {
+                    this.spendedMoneyClients = response.data.data;
+                })
+                .catch(error => {
+                    Vue.$toast.error(`Error: ${error}`, { position: 'top-right' });
+                })
+                .finally(() => {
+                    this.loadingSpendedMoneyClients = false;
+                });
+            },
+            getPopularIngredients(){ // Obtener ingredientes más populares
+                let url = `ingredients/popular`;
+
+                this.loadingPopularIngredients = true;
+                axios.get(url)
+                .then(response => {
+                    this.popularIngredients = response.data.data;
+                })
+                .catch(error => {
+                    Vue.$toast.error(`Error: ${error}`, { position: 'top-right' });
+                })
+                .finally(() => {
+                    this.loadingPopularIngredients = false;
+                });
+            },
+            getBranchOffices(){ // Obtener sucursales
+                let me = this;
+                let url = `branch-offices`
+
+                me.loadingBranchOffices = true;
+                axios.get(url)
+                .then(response => {
+                    me.branchOffices = response.data.data;
+                })
+                .catch(error => {
+                    Vue.$toast.error(`Error: ${error}`, { position: 'top-right' });
+                })
+                .finally(() => {
+                    me.loadingBranchOffices = false;
+                });
+            },
         },
         mounted(){
-
+            this.getUsualClients();
+            this.getSpendedMoneyClients();
+            this.getPopularIngredients();
+            this.getBranchOffices();
         }
     }
 </script>
