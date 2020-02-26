@@ -18,6 +18,7 @@ class UserTransformer extends TransformerAbstract
             'id'         => (int)$user->id,
             'name'       => (string)$user->name,
             'email'      => (string)$user->email,
+            'is_active'  => $user->isActive(),
             'created_at' => (string)$user->created_at
         ];
     }

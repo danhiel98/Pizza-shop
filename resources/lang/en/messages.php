@@ -62,5 +62,15 @@ return [
     'most_popular_ingredients'   => 'Most popular ingredients',
     'times_used'                 => 'Times used (combinations)',
     'users'                      => 'Users',
-    'no_records_found'           => 'No records were found'
+    'no_records_found'           => 'No records were found',
+    'users_management'           => 'Users Management',
+    'is_active'                  => 'Is active',
+    'reset_password'             => 'Reset password',
+    'disable'                    => 'Disable',
+    'enable'                     => 'Enable',
+    'new_user'                   => 'New user',
+    'created_user_message'       => 'Success! User created correctly',
+    'password_reset_message'     => 'Success! Password reset correctly',
+    'user_disabled_message'      => 'Success! User disabled correctly',
+    'user_enabled_message'       => 'Success! User enabled correctly',
 ];

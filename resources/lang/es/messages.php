@@ -62,5 +62,15 @@ return [
     'most_popular_ingredients'   => 'Ingredientes más populares',
     'times_used'                 => 'Veces utilizado',
     'users'                      => 'Usuarios',
-    'no_records_found'           => 'No se encontraron registros'
+    'no_records_found'           => 'No se encontraron registros',
+    'users_management'           => 'Administración de usuarios',
+    'is_active'                  => 'Activo',
+    'reset_password'             => 'Restablecer contraseña',
+    'disable'                    => 'Deshabilitar',
+    'enable'                     => 'Habilitar',
+    'new_user'                   => 'Nuevo usuario',
+    'created_user_message'       => '¡Hecho! Usuario creado correctamente',
+    'password_reset_message'     => '¡Hecho! Contraseña restablecida correctamente',
+    'user_disabled_message'      => '¡Hecho! Usuario desactivado correctamente',
+    'user_enabled_message'       => '¡Hecho! Usuario activado correctamente',
 ];

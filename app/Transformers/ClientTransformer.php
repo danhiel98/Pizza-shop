@@ -20,6 +20,7 @@ class ClientTransformer extends TransformerAbstract
             'email'          => (string)$client->email,
             'order_quantity' => (int)$client->order_quantity,
             'total_spended'  => (double)number_format($client->total_spended, 2),
+            'is_active'      => $client->isActive(),
             'created_at'     => (string)$client->created_at
         ];
     }

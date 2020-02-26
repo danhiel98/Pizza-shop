@@ -16,6 +16,8 @@ class User extends Authenticatable
 
     protected $table = 'users';
 
+    public const USER_ACTIVE = 'true';
+    public const USER_NO_ACTIVE = 'false';
     public const CLIENT_USER = 'client'; // Si el usuario es un cliente
     public const NORMAL_USER = 'user'; // Si el usuario se encarga de administrar el sistema
 
@@ -54,5 +56,10 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return $this->type === USER::NORMAL_USER;
+    }
+
+    public function isActive()
+    {
+        return $this->is_active === USER::USER_ACTIVE;
     }
 }

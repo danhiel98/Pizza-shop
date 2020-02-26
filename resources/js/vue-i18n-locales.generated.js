@@ -66,7 +66,17 @@ export default {
             "most_popular_ingredients": "Most popular ingredients",
             "times_used": "Times used (combinations)",
             "users": "Users",
-            "no_records_found": "No records were found"
+            "no_records_found": "No records were found",
+            "users_management": "Users Management",
+            "is_active": "Is active",
+            "reset_password": "Reset password",
+            "disable": "Disable",
+            "enable": "Enable",
+            "new_user": "New user",
+            "created_user_message": "Success! User created correctly",
+            "password_reset_message": "Success! Password reset correctly",
+            "user_disabled_message": "Success! User disabled correctly",
+            "user_enabled_message": "Success! User enabled correctly"
         },
         "pagination": {
             "previous": "&laquo; Previous",
@@ -259,7 +269,17 @@ export default {
             "most_popular_ingredients": "Ingredientes más populares",
             "times_used": "Veces utilizado",
             "users": "Usuarios",
-            "no_records_found": "No se encontraron registros"
+            "no_records_found": "No se encontraron registros",
+            "users_management": "Administración de usuarios",
+            "is_active": "Activo",
+            "reset_password": "Restablecer contraseña",
+            "disable": "Deshabilitar",
+            "enable": "Habilitar",
+            "new_user": "Nuevo usuario",
+            "created_user_message": "¡Hecho! Usuario creado correctamente",
+            "password_reset_message": "¡Hecho! Contraseña restablecida correctamente",
+            "user_disabled_message": "¡Hecho! Usuario desactivado correctamente",
+            "user_enabled_message": "¡Hecho! Usuario activado correctamente"
         },
         "passwords": {
             "reset": "¡Su contraseña ha sido restablecida!",

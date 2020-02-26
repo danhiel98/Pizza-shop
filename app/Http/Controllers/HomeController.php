@@ -35,6 +35,11 @@ class HomeController extends Controller
             return view('client.dashboard');
     }
 
+    /**
+     * Carga vista para generar nuevo pedido
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
     public function new()
     {
         if (Auth::user()->type == User::NORMAL_USER) return view('home');
@@ -42,6 +47,18 @@ class HomeController extends Controller
         return view('client.new-order');
     }
 
+    public function users()
+    {
+        if (Auth::user()->type == User::CLIENT_USER) return view('home');
+
+        return view('admin.users');
+    }
+
+    /**
+     * Develve el último pedido ingresado
+     *
+     * @return Order
+     */
     public function orderNumber()
     {
         $order = Order::orderBy('id')->get()->last();
@@ -49,6 +66,11 @@ class HomeController extends Controller
         return $this->showOne($order);
     }
 
+    /**
+     * Devuelve los datos de configuración del sistema
+     *
+     * @return Collection
+     */
     public function config()
     {
         $configs = Config::all()->first();

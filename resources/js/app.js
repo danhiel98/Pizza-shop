@@ -37,6 +37,7 @@ Vue.component('stack-modal', StackModal);
 Vue.component('client-home', require('./components/Client/Dashboard.vue').default);
 Vue.component('admin-home', require('./components/Admin/Dashboard.vue').default);
 Vue.component('new-order', require('./components/Client/NewOrder.vue').default);
+Vue.component('users-view', require('./components/Admin/Users.vue').default);
 
 // URL base para las peticiones con axios
 axios.defaults.baseURL = 'http://localhost:8000';

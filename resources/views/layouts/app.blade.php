@@ -60,7 +60,7 @@
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     @if (Auth::user()->isAdmin())
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="{{ route('users') }}">
                                         {{ __('messages.users') }}
                                     </a>
                                     @endif
