@@ -16,7 +16,7 @@
                         </h5>
                     </div>
                     <div class="card-body-2">
-                        <table class="table table-striped table-sm">
+                        <table v-if="orderHistory.length > 0" class="table table-striped table-sm">
                             <thead>
                                 <tr>
                                     <th scope="col">{{ $t('messages.order_number') }}</th>
@@ -38,6 +38,11 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div v-else>
+                            <div class="bg-secondary text-white">
+                                {{ $t('messages.no_records_found') }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -50,7 +55,7 @@
                         </h5>
                     </div>
                     <div class="card-body-2">
-                        <table class="table table-striped table-sm">
+                        <table v-if="presetCombinations.length" class="table table-striped table-sm">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
@@ -73,6 +78,11 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div v-else>
+                            <div class="bg-secondary text-white">
+                                {{ $t('messages.no_records_found') }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -85,7 +95,7 @@
                         </h5>
                     </div>
                     <div class="card-body-2">
-                        <table class="table table-striped table-sm">
+                        <table v-if="aviableIngredients.length" class="table table-striped table-sm">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
@@ -101,6 +111,11 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div v-else>
+                            <div class="bg-secondary text-white">
+                                {{ $t('messages.no_records_found') }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -113,7 +128,7 @@
                         </h5>
                     </div>
                     <div class="card-body-2">
-                        <table class="table table-striped table-sm">
+                        <table v-if="branchOffices.length" class="table table-striped table-sm">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
@@ -129,6 +144,11 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div v-else>
+                            <div class="bg-secondary text-white">
+                                {{ $t('messages.no_records_found') }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

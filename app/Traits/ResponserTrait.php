@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 
 trait ResponserTrait
 {
-    // Trasformar la respuesta
+    // Trasformar la respuesta para devolver solamente campos especificos
     protected function transformData($data, $transformer){
         $transformation = fractal($data, new $transformer);
 
@@ -28,7 +28,7 @@ trait ResponserTrait
     // Respuesta de la coleccion de registros encontrados
     public function showAll(Collection $collection, $code = 200)
     {
-        if ($collection->count() == 0) return $this->successResponse($collection, $code);
+        if ($collection->count() == 0) return $this->successResponse(['data' => $collection], $code);
 
         $transformer = $collection->first()->transformer;
         $collection = $this->transformData($collection, $transformer);

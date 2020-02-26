@@ -59,13 +59,17 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    @if (Auth::user()->isAdmin())
+                                    <a class="dropdown-item" href="#">
+                                        {{ __('messages.users') }}
+                                    </a>
+                                    @endif
                                     <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                       @click.prevent="$refs.logoutForm.submit()">
                                         {{ __('messages.logout') }}
                                     </a>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    <form id="logout-form" ref="logoutForm" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
                                 </div>
@@ -85,7 +89,7 @@
             </div>
         </nav>
 
-        <main>
+        <main class="py-3">
             @yield('content')
         </main>
     </div>

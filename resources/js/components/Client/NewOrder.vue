@@ -90,7 +90,7 @@
                 </div>
             </div>
             <div class="col-md-6 mx-auto">
-                <a href="#" @click.prevent="saveOrder" class="btn btn-success">{{ $t('messages.save_order') }}</a>
+                <button ref="btnSaveOrder" @click.prevent="saveOrder" class="btn btn-success">{{ $t('messages.save_order') }}</button>
             </div>
         </div>
 
@@ -159,7 +159,7 @@
                     </div>
                     <div class="col-md-12 form-inline mb-3">
                         <label for="combinationName"><strong>{{ $t('messages.combination_name') }}</strong></label>
-                        <input type="text" id="combinationName" class="form-control col-md-7 form-control-sm mx-sm-3" v-model="combinationName">
+                        <input type="text" id="combinationName" class="form-control col-md-6 form-control-sm mx-sm-3" v-model="combinationName">
                     </div>
                     <div class="col-md-12 pr-2" style="max-height: 200px; overflow-y: auto;">
                         <table class="table table-striped table-sm">
@@ -319,6 +319,7 @@
                 let me = this;
                 let url = `clients/${this.$userId}/orders`;
 
+                me.$refs.btnSaveOrder.disabled = true;
                 try {
                     if (this.selectedCombinations.length <= 0) throw this.translate('add_pizzas_message')
 
@@ -333,8 +334,11 @@
                         })
                     })
                     .catch(error => {
-                        throw error;
-                    });
+                        Vue.$toast.error(`Error: ${error}`, { position: 'top-right' });
+                    })
+                    .finally(() => {
+                        me.$refs.btnSaveOrder.disabled = false;
+                    })
                 } catch (error) {
                     Vue.$toast.error(`Error: ${error}`, { position: 'top-right' });
                     return;

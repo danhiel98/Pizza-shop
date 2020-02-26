@@ -60,5 +60,7 @@ return [
     'money_spended_client'       => 'Clientes (más dinero gastado)',
     'spended_money'              => 'Dinero gastado',
     'most_popular_ingredients'   => 'Ingredientes más populares',
-    'times_used'                 => 'Veces utilizado'
+    'times_used'                 => 'Veces utilizado',
+    'users'                      => 'Usuarios',
+    'no_records_found'           => 'No se encontraron registros'
 ];
