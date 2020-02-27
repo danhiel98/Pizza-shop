@@ -4,13 +4,7 @@ El proyecto consiste en poder realizar ordenes de pizzas, teniendo la posibilida
 
 También hay una parte de administración, donde se puede ver los clientes más frecuentes, los que más gastan en la pizzería, los ingredientes más populares y se pueden administrar usuarios, así mismo, generar un reporte en Excel de los usuarios.
 
-El proyecto se ha realizado con 
-
-[Laravel]: https://laravel.com/
-
- y 
-
-[Vue.js]: https://vuejs.org/
+El proyecto se ha realizado con [Laravel](https://laravel.com/) y [Vue.js](https://vuejs.org)
 
 
 
