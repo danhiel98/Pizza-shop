@@ -2328,6 +2328,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -42364,7 +42367,9 @@ var render = function() {
                 }
               },
               [_c("i", { staticClass: "fa fa-user-plus" })]
-            )
+            ),
+            _vm._v(" "),
+            _vm._m(0)
           ])
         ]),
         _vm._v(" "),
@@ -42648,7 +42653,21 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "a",
+      {
+        staticClass: "btn btn-outline-secondary",
+        attrs: { href: "/users/excel", target: "_blank" }
+      },
+      [_c("i", { staticClass: "fa fa-download" })]
+    )
+  }
+]
 render._withStripped = true
 
 

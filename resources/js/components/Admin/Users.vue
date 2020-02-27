@@ -7,6 +7,9 @@
                     <a href="#" @click.prevent="newUserModal=true" class="btn btn-primary">
                         <i class="fa fa-user-plus"></i>
                     </a>
+                    <a href="/users/excel" target="_blank" class="btn btn-outline-secondary">
+                        <i class="fa fa-download"></i>
+                    </a>
                 </small>
             </div>
             <div class="card-deck">

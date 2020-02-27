@@ -1,5 +1,8 @@
 <?php
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AdministratorsExport;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,6 +28,9 @@ Route::get('ingredients/popular', 'Ingredient\IngredientController@popular'); //
 Route::put('administrators/{administrator}/reset', 'Administrator\AdministratorController@resetPassword'); // Restablecer contraseña de usuario
 Route::put('administrators/{administrator}/disable', 'Administrator\AdministratorController@disable'); // Desactivar usuario
 Route::put('administrators/{administrator}/enable', 'Administrator\AdministratorController@enable'); // Activar usuario
+Route::get('users/excel', function () {
+    return Excel::download(new AdministratorsExport, 'Users '. date('d-m-Y H:i:s') .'.xlsx');
+});
 
 Route::resource('clients.orders', 'Client\ClientOrderController', ['except' => ['create', 'edit']]);
 Route::resource('ingredients', 'Ingredient\IngredientController', ['except' => ['create', 'edit']]);
